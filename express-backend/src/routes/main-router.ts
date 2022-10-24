@@ -6,6 +6,7 @@ const mainRouter = Router();
 mainRouter.post('/login', MainRouterController.getNewPublicKey);
 mainRouter.post('/get-profile-details', MainRouterController.getProfileDetails);
 mainRouter.post('/get-account-details', MainRouterController.getAccountDetails);
+mainRouter.post('/transaction', MainRouterController.getTransaction);
 
 
 export default mainRouter;

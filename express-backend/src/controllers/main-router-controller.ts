@@ -8,6 +8,7 @@ import { ProfileDetails } from '../interfaces/profile.interface.js';
 import { ProfileDetailsMocks } from '../mocks/profileDetailsMocks.js';
 import { AccountDetails } from '../interfaces/account.interface.js';
 import { AccountDetailsMocks } from '../mocks/accountDetailsMocks.js';
+import { Filter } from "../interfaces/filter.interface.js";
 
 
 class MainRouterController {
@@ -22,6 +23,10 @@ class MainRouterController {
 
 	async getAccountDetails(req: Request<{id: string}>, res: Response<AccountDetails>) {
 		res.json(AccountDetailsMocks);
+	}
+
+	async getTransaction(req: Request<Filter>, res: Response<{id: string}>) {
+		res.json({id: "555-555-555-555"});
 	}
 }
 
