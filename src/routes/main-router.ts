@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import MainRouterController from '../controllers/main-router-controller.js';
+
+const mainRouter = Router();
+
+mainRouter.post('/login', MainRouterController.getNewPublicKey);
+mainRouter.post('/get-profile-details', MainRouterController.getProfileDetails);
+mainRouter.post('/get-account-details', MainRouterController.getAccountDetails);
+
+
+export default mainRouter;
