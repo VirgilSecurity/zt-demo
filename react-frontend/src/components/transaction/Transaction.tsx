@@ -39,7 +39,7 @@ const Transaction = () => {
 		})
 	}, [])
 	return (
-		<DivFlexBoxColumn>
+		<DivFlexBoxColumn style={{margin: "auto"}}>
 			<DivFlexBox>
 				<TransactionsWrapper>
 					<TransactionsItem>
