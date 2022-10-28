@@ -12,7 +12,7 @@ const Profile = () => {
 	const [profileInfo, setProfileInfo] = useState<ProfileDetails>();
 	useEffect(() => {
 		BackendService.getProfileDetails().then((value) => {
-			setProfileInfo(value.data)
+			setProfileInfo(value)
 		});
 	}, [])
 	console.log(profileInfo);

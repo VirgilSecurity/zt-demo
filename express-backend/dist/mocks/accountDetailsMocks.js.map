@@ -1,1 +1,1 @@
-{"version":3,"file":"accountDetailsMocks.js","sourceRoot":"","sources":["../../src/mocks/accountDetailsMocks.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,MAAM,mBAAmB,GAAmB;IAClD,YAAY,EAAE;QACb;YACC,WAAW,EAAE,kBAAkB;YAC/B,MAAM,EAAE,KAAK;YACb,IAAI,EAAE,OAAO;SACb;KACD;CACD,CAAC"}
+{"version":3,"file":"accountDetailsMocks.js","sourceRoot":"","sources":["../../src/mocks/accountDetailsMocks.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,MAAM,mBAAmB,GAAW,qFAAqF,CAAC"}

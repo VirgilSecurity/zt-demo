@@ -2,7 +2,11 @@ import React, {
 	useEffect,
 	useState
 } from 'react';
-import { DivFlexBox, DivFlexBoxColumn, MenuButton } from "../styled.components";
+import {
+	DivFlexBox,
+	DivFlexBoxColumn,
+	MenuButton
+} from "../styled.components";
 import { Filter } from "../../constants/filters.inteface";
 import BackendService from "../../services/services";
 import {
@@ -15,6 +19,7 @@ import {
 	AccountDetails,
 	Transactions
 } from "../../constants/profile.interface";
+import { Transactions } from "../../constants/profile.interface";
 
 
 const Transaction = () => {
@@ -35,7 +40,7 @@ const Transaction = () => {
 	}
 	useEffect(() => {
 		BackendService.getAccountDetails().then((value) => {
-			setTransactions(value.data.transactions);
+			setTransactions(value.transactions);
 		})
 	}, [])
 	return (
