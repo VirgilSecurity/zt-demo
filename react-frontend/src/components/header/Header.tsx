@@ -20,11 +20,11 @@ const Header = () => {
 		<>
 			<DivFlexBox>
 				<HeaderWrapper>
-					<MenuButtonLink to='/'>Главная</MenuButtonLink>
-					<MenuButtonLink to='/transactions'>Транзакции</MenuButtonLink>
+					<MenuButtonLink to='/'>Main Page</MenuButtonLink>
+					<MenuButtonLink to='/transactions'>Transactions</MenuButtonLink>
 					{
-						!isLogged ? <MenuButton onClick={login}>Логин</MenuButton> :
-						<MenuButtonLink to='/profile'>Профиль</MenuButtonLink>
+						!isLogged ? <MenuButton onClick={login}>Login</MenuButton> :
+						<MenuButtonLink to='/profile'>Profile</MenuButtonLink>
 					}
 				</HeaderWrapper>
 			</DivFlexBox>
