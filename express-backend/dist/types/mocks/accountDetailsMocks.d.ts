@@ -1,2 +1,1 @@
-import { AccountDetails } from '../interfaces/account.interface.js';
-export declare const AccountDetailsMocks: AccountDetails;
+export declare const AccountDetailsMocks: string;

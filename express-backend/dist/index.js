@@ -3,25 +3,16 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morganMiddleware from './logger/morganMiddleware.js';
 import routes from './routes/routes.js';
-import { initCrypto, VirgilAccessTokenSigner, VirgilCrypto } from "virgil-crypto";
-import { JwtGenerator } from "virgil-sdk";
+import { initCrypto, KeyPairType, VirgilCrypto } from "virgil-crypto";
 dotenv.config();
-const start = async () => {
+const app = express();
+(async () => {
     // create express app
-    const app = express();
     await initCrypto();
-    const virgilCrypto = new VirgilCrypto();
-    const accessTokenSigner = new VirgilAccessTokenSigner(virgilCrypto);
-    const apiKey = virgilCrypto.importPrivateKey({
-        value: process.env.APP_KEY ?? '',
-        encoding: 'base64',
-    });
-    const jwtGenerator = new JwtGenerator({
-        apiKey,
-        accessTokenSigner,
-        appId: process.env.APP_ID ?? '',
-        apiKeyId: process.env.APP_KEY_ID ?? '',
-    });
+    const virgilCrypto = new VirgilCrypto({ defaultKeyPairType: KeyPairType.ED25519 });
+    const keyPair = virgilCrypto.generateKeys(KeyPairType.ED25519);
+    app.set('keyPair', keyPair);
+    app.set('virgilCrypto', virgilCrypto);
     // use custom middlewares for logs and json convert
     app.use(cors());
     app.use(express.json());
@@ -29,13 +20,10 @@ const start = async () => {
     // apply routes
     app.use(routes);
     app.get('/', (req, res) => {
-        res.send(jwtGenerator.generateToken('111'));
+        res.send('Application is running');
     });
-    return app;
-};
-start().then((app) => {
     app.listen(process.env.PORT, () => {
         console.log('server is running');
     });
-});
+})();
 //# sourceMappingURL=index.js.map
