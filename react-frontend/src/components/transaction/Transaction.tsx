@@ -9,6 +9,16 @@ import {
 } from "../styled.components";
 import { Filter } from "../../constants/filters.inteface";
 import BackendService from "../../services/services";
+import {
+	TransactionsWrapper,
+	TransactionsItem,
+	TransactionsLabel,
+	TransactionInfo
+} from './styled';
+import {
+	AccountDetails,
+	Transactions
+} from "../../constants/profile.interface";
 import { Transactions } from "../../constants/profile.interface";
 
 
@@ -34,24 +44,28 @@ const Transaction = () => {
 		})
 	}, [])
 	return (
-		<DivFlexBoxColumn>
+		<DivFlexBoxColumn style={{margin: "auto"}}>
 			<DivFlexBox>
-				<div>
-					<span>Кому</span>
-					<select>
-						<option value='234-234-234-234' onSelect={(e) => handleChange({to: e.currentTarget.value})}>234-234-234-234</option>
-					</select>
-				</div>
-				<div>
-					<span>Сумма транзакции</span>
-					<input placeholder='Сумма' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
-				</div>
-				<MenuButton onClick={doTransaction}>Создать тразакцию</MenuButton>
+				<TransactionsWrapper>
+					<TransactionsItem>
+						<TransactionsLabel>Кому</TransactionsLabel>
+						<select>
+							<option value='234-234-234-234' onSelect={(e) => handleChange({to: e.currentTarget.value})}>234-234-234-234</option>
+						</select>
+					</TransactionsItem>
+					<TransactionsItem>
+						<TransactionsLabel>Сумма транзакции</TransactionsLabel>
+						<input placeholder='Сумма' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
+					</TransactionsItem>
+					<MenuButton onClick={doTransaction}>Создать тразакцию</MenuButton>
+				</TransactionsWrapper>
 			</DivFlexBox>
 			<DivFlexBox>
-				<div>{transactions[0]?.type}</div>
-				<div>{transactions[0]?.amount}</div>
-				<div>{transactions[0]?.createdDate}</div>
+				<TransactionInfo>
+					<div>{transactions[0]?.type}</div>
+					<div>{transactions[0]?.amount}</div>
+					<div>{transactions[0]?.createdDate}</div>
+				</TransactionInfo>
 			</DivFlexBox>
 		</DivFlexBoxColumn>
 	);
