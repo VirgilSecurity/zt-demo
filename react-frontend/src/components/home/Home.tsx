@@ -1,26 +1,11 @@
-import React, { useState } from 'react';
-import {
-  HomeWrapper
-} from "./styled";
-import {
-	MenuButton,
-	MenuButtonLink
-} from './styled';
-import BackendService from "../../services/services";
+import React from 'react';
+import { HomeWrapper } from "./styled";
+
 
 const Home = () => {
-	const [isLogged, setIsLogged] = useState<boolean>(false)
-	const login = () => {
-		BackendService.login();
-		setIsLogged(true);
-	}
 	return (
 		<HomeWrapper>
-			<h1>мы самый шифрованный банк в мире, но без денег</h1>
-			{
-				!isLogged ? <MenuButton onClick={login}>Логин</MenuButton> :
-				<MenuButtonLink to='/profile'>Профиль</MenuButtonLink>
-			}
+			<h1>ZT Bank, best cryptography bank</h1>
 		</HomeWrapper>
 	);
 };

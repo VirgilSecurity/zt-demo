@@ -4,8 +4,18 @@ import React, {
 } from 'react';
 import BackendService from '../../services/services';
 import { ProfileDetails } from "../../constants/profile.interface";
-import { ProfileWrapper, Title, ProfileInfo, ProfileAvatar, ProfileName, ProfileList, ProfileListItem } from './styled';
+import {
+	ProfileAvatar,
+	ProfileCell,
+	ProfileInfo,
+	ProfileList,
+	ProfileListItem,
+	ProfileName,
+	ProfileWrapper,
+	Title
+} from './styled';
 import avatar from '../../images/avatar.svg';
+import { DivFlexJustify } from '../styled.components';
 
 
 const Profile = () => {
@@ -15,22 +25,38 @@ const Profile = () => {
 			setProfileInfo(value)
 		});
 	}, [])
-	console.log(profileInfo);
 	return (
 		<ProfileWrapper>
 			<Title>Profile Page</Title>
 			<ProfileInfo>
 				<ProfileAvatar>
-					<img src={avatar} alt="" />
+					<img src={avatar} alt=""/>
 				</ProfileAvatar>
-				<ProfileName>Гений Соблазнитель</ProfileName>
+				<ProfileName>{profileInfo?.name}</ProfileName>
 			</ProfileInfo>
 			<ProfileList>
-				<ProfileListItem>List item 1</ProfileListItem>
-				<ProfileListItem>List item 1</ProfileListItem>
-				<ProfileListItem>List item 1</ProfileListItem>
-				<ProfileListItem>List item 1</ProfileListItem>
-				<ProfileListItem>List item 1</ProfileListItem>
+				<ProfileListItem key='0'>
+					<DivFlexJustify>
+						<ProfileCell>
+							Payment Date
+						</ProfileCell>
+						<ProfileCell>
+							Current Balance
+						</ProfileCell>
+					</DivFlexJustify>
+				</ProfileListItem>
+				{profileInfo?.accounts.map((value, index) => {
+					return (<ProfileListItem key={index}>
+						<DivFlexJustify>
+							<ProfileCell>
+								{value.createdDate}
+							</ProfileCell>
+							<ProfileCell>
+								{value.balance + ' ' + value.currency}
+							</ProfileCell>
+						</DivFlexJustify>
+					</ProfileListItem>);
+				})}
 			</ProfileList>
 		</ProfileWrapper>
 	);

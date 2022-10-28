@@ -65,3 +65,8 @@ export const ProfileListItem = styled.li`
   font-size: 18px;
   color: #ffffff;
 `;
+
+export const ProfileCell = styled.div`
+  display: flex;
+  justify-content: center;
+`

@@ -23,6 +23,15 @@ export const DivFlexBox = styled.div`
   margin: 0 auto;
 `
 
+export const DivFlexJustify = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-self: center;
+`
+
 export const DivFlexBoxColumn = styled.div`
   width: 100%;
   display: flex;

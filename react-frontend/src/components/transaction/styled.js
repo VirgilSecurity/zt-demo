@@ -48,7 +48,7 @@ export const TransactionInfo = styled.div`
   color: #ffffff;
   font-size: 24px;
   width: 100%;
-  display: fle;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   text-align: center;

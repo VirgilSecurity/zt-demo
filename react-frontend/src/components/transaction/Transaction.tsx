@@ -5,6 +5,7 @@ import React, {
 import {
 	DivFlexBox,
 	DivFlexBoxColumn,
+	DivFlexJustify,
 	MenuButton
 } from "../styled.components";
 import { Filter } from "../../constants/filters.inteface";
@@ -19,13 +20,17 @@ import {
 	AccountDetails,
 	Transactions
 } from "../../constants/profile.interface";
-import { Transactions } from "../../constants/profile.interface";
+import {
+	ProfileCell,
+	ProfileList,
+    ProfileListItem
+} from "../profile/styled";
 
 
 const Transaction = () => {
 	const [filters, setFilters] = useState<Filter>({
 		from: "555-555-555-55",
-		to: '',
+		to: '234-234-234-234',
 		amount: 0,
 	});
 	const [transactions, setTransactions] = useState<Transactions[]>([])
@@ -39,7 +44,7 @@ const Transaction = () => {
 		BackendService.getTransaction(filters)
 	}
 	useEffect(() => {
-		BackendService.getAccountDetails().then((value) => {
+		BackendService.getAccountDetails().then((value: AccountDetails) => {
 			setTransactions(value.transactions);
 		})
 	}, [])
@@ -48,23 +53,50 @@ const Transaction = () => {
 			<DivFlexBox>
 				<TransactionsWrapper>
 					<TransactionsItem>
-						<TransactionsLabel>Кому</TransactionsLabel>
+						<TransactionsLabel>To:</TransactionsLabel>
 						<select>
 							<option value='234-234-234-234' onSelect={(e) => handleChange({to: e.currentTarget.value})}>234-234-234-234</option>
 						</select>
 					</TransactionsItem>
 					<TransactionsItem>
-						<TransactionsLabel>Сумма транзакции</TransactionsLabel>
-						<input placeholder='Сумма' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
+						<TransactionsLabel>Sum of transaction:</TransactionsLabel>
+						<input placeholder='Sum' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
 					</TransactionsItem>
-					<MenuButton onClick={doTransaction}>Создать тразакцию</MenuButton>
+					<MenuButton onClick={doTransaction}>Create Transaction</MenuButton>
 				</TransactionsWrapper>
 			</DivFlexBox>
 			<DivFlexBox>
 				<TransactionInfo>
-					<div>{transactions[0]?.type}</div>
-					<div>{transactions[0]?.amount}</div>
-					<div>{transactions[0]?.createdDate}</div>
+				<ProfileList key='0'>
+					<ProfileListItem>
+						<DivFlexJustify>
+							<ProfileCell>
+								Operation type
+							</ProfileCell>
+							<ProfileCell>
+								Operation amount
+							</ProfileCell>
+							<ProfileCell>
+								Date of operation
+							</ProfileCell>
+						</DivFlexJustify>
+					</ProfileListItem>
+					{transactions.map((value, index) => {
+						return (<ProfileListItem key={index}>
+									<DivFlexJustify>
+										<ProfileCell>
+											{value.type}
+										</ProfileCell>
+										<ProfileCell>
+											{value.amount}
+										</ProfileCell>
+										<ProfileCell>
+											{value.createdDate}
+										</ProfileCell>
+									</DivFlexJustify>
+								</ProfileListItem>)
+					})}
+				</ProfileList>
 				</TransactionInfo>
 			</DivFlexBox>
 		</DivFlexBoxColumn>
