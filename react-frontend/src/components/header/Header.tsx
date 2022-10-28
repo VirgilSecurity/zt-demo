@@ -4,6 +4,9 @@ import {
 	MenuButton,
 	MenuButtonLink
 } from '../styled.components';
+import {
+  HeaderWrapper
+} from "./styled";
 import BackendService from "../../services/services";
 
 
@@ -16,12 +19,14 @@ const Header = () => {
 	return (
 		<>
 			<DivFlexBox>
-				<MenuButtonLink to='/'>Главная</MenuButtonLink>
-				<MenuButtonLink to='/transactions'>Транзакции</MenuButtonLink>
-				{
-					!isLogged ? <MenuButton onClick={login}>Логин</MenuButton> :
-					<MenuButtonLink to='/profile'>Профиль</MenuButtonLink>
-				}
+				<HeaderWrapper>
+					<MenuButtonLink to='/'>Главная</MenuButtonLink>
+					<MenuButtonLink to='/transactions'>Транзакции</MenuButtonLink>
+					{
+						!isLogged ? <MenuButton onClick={login}>Логин</MenuButton> :
+						<MenuButtonLink to='/profile'>Профиль</MenuButtonLink>
+					}
+				</HeaderWrapper>
 			</DivFlexBox>
 		</>
 	);

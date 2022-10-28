@@ -7,10 +7,9 @@ export const Wrapper = styled.div`
   box-sizing: border-box;
   margin: 0 auto;
   max-width: 1200px;
-  height: 1200px;
+  min-height: calc(100vh - 69px);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 `
 
@@ -21,7 +20,6 @@ export const DivFlexBox = styled.div`
   justify-content: center;
   align-items: center;
   align-self: center;
-  padding: 10px;
   margin: 0 auto;
 `
 
@@ -36,19 +34,36 @@ export const DivFlexBoxColumn = styled.div`
 `
 
 export const MenuButtonLink = styled(Link)`
-  margin-left: 25px;
-  padding: 25px;
+  padding: 8px 16px;
   text-decoration: none;
-  background: radial-gradient(circle, hsla(120, 88%, 73%, 1) 17%, hsla(159, 55%, 44%, 1) 75%);
-  box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  background: #4E62C0;
   border-radius: 150px;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: .2s ease-out;
+
+  &:hover {
+    box-shadow: 0 0 12px #4E62C0;
+  }
+
+  &:last-child {
+    margin-left: auto;
+  }
 `
 
 export const MenuButton = styled.button`
-  margin-left: 25px;
-  padding: 25px;
+  padding: 8px 16px;
   text-decoration: none;
-  background: radial-gradient(circle, hsla(120, 88%, 73%, 1) 17%, hsla(159, 55%, 44%, 1) 75%);
-  box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  background: #4E62C0;
   border-radius: 150px;
+  color: #ffffff;
+  font-size: 16px;
+  margin-left: auto;
+  cursor: pointer;
+  transition: .2s ease-out;
+
+  &:hover {
+    box-shadow: 0 0 12px #4E62C0;
+  }
 `
