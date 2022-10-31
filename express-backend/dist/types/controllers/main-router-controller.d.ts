@@ -1,4 +1,4 @@
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 import { ProfileDetails } from '../interfaces/profile.interface.js';
 import { AccountDetails } from '../interfaces/account.interface.js';
 import { VirgilPrivateKey } from "virgil-crypto/dist/types/VirgilPrivateKey";
@@ -22,7 +22,11 @@ declare class MainRouterController {
         data: {
             id: string;
         };
-    }>): Promise<void>;
+    }>): Promise<Response<{
+        data: {
+            id: string;
+        };
+    }, Record<string, any>>>;
 }
 declare const _default: MainRouterController;
 export default _default;

@@ -83,7 +83,7 @@ class BackedService {
 		});
 	}
 
-	public async getTransaction(filter?: Filter): Promise<{id: string}> {
+	public async getTransaction(filter?: Filter): Promise<{id: string} | string> {
 		console.log('POST /transaction request data before encrypt', filter);
 		console.log(JSON.stringify(filter));
 		const encryptedFilter = this.virgilCrypto.signThenEncrypt(JSON.stringify(filter), this.keyPair.privateKey, this.serverPublicKey).toString('base64')
