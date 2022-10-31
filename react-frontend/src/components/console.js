@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Console, Hook, Unhook } from 'console-feed'
+import styles from './styles.module.css';
 
 const LogsContainer = () => {
     const [logs, setLogs] = useState([])
@@ -10,7 +11,7 @@ const LogsContainer = () => {
         return () => Unhook(window.console)
     }, [])
 
-    return <div style={{width: "100%", backgroundColor: "black"}}>
+    return <div className={styles.console} style={{width: "100%", backgroundColor: "black"}}>
         <Console logs={logs} variant="dark" />
     </div>
 }
