@@ -21,7 +21,7 @@ const Header = () => {
 			<DivFlexBox>
 				<HeaderWrapper>
 					<MenuButtonLink to='/'>Main Page</MenuButtonLink>
-					<MenuButtonLink to='/transactions'>Transactions</MenuButtonLink>
+					{isLogged && <MenuButtonLink to='/transactions'>Transactions</MenuButtonLink>}
 					{
 						!isLogged ? <MenuButton onClick={login}>Login</MenuButton> :
 						<MenuButtonLink to='/profile'>Profile</MenuButtonLink>

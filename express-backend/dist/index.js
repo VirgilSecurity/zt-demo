@@ -22,7 +22,7 @@ const app = express();
     app.get('/', (req, res) => {
         res.send('Application is running');
     });
-    app.listen(process.env.PORT, () => {
+    app.listen('3002', () => {
         console.log('server is running');
     });
 })();
