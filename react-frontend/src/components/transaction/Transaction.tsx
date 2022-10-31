@@ -6,7 +6,7 @@ import {
 	DivFlexBox,
 	DivFlexBoxColumn,
 	DivFlexJustify,
-	MenuButton
+	MenuButtonHeader
 } from "../styled.components";
 import { Filter } from "../../constants/filters.inteface";
 import BackendService from "../../services/services";
@@ -15,7 +15,7 @@ import {
 	TransactionsItem,
 	TransactionsLabel,
 	TransactionInfo
-} from './styled';
+} from '../styled.components';
 import {
 	AccountDetails,
 	Transactions
@@ -62,7 +62,7 @@ const Transaction = () => {
 						<TransactionsLabel>Sum of transaction:</TransactionsLabel>
 						<input placeholder='Sum' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
 					</TransactionsItem>
-					<MenuButton onClick={doTransaction}>Create Transaction</MenuButton>
+					<MenuButtonHeader onClick={doTransaction}>Create Transaction</MenuButtonHeader>
 				</TransactionsWrapper>
 			</DivFlexBox>
 			<DivFlexBox>

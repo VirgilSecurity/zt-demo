@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
 	DivFlexBox,
-	MenuButton,
-	MenuButtonLink
+	MenuButtonHeader,
+	MenuButtonLinkHeader
 } from '../styled.components';
 import {
   HeaderWrapper
-} from "./styled";
+} from "../styled.components";
 import BackendService from "../../services/services";
 
 
@@ -20,11 +20,11 @@ const Header = () => {
 		<>
 			<DivFlexBox>
 				<HeaderWrapper>
-					<MenuButtonLink to='/'>Main Page</MenuButtonLink>
-					<MenuButtonLink to='/transactions'>Transactions</MenuButtonLink>
+					<MenuButtonLinkHeader to='/'>Main Page</MenuButtonLinkHeader>
+					<MenuButtonLinkHeader to='/transactions'>Transactions</MenuButtonLinkHeader>
 					{
-						!isLogged ? <MenuButton onClick={login}>Login</MenuButton> :
-						<MenuButtonLink to='/profile'>Profile</MenuButtonLink>
+						!isLogged ? <MenuButtonHeader onClick={login}>Login</MenuButtonHeader> :
+						<MenuButtonLinkHeader to='/profile'>Profile</MenuButtonLinkHeader>
 					}
 				</HeaderWrapper>
 			</DivFlexBox>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HomeWrapper } from "./styled";
+import { HomeWrapper } from "../styled.components";
 
 
 const Home = () => {
