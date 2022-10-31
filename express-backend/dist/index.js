@@ -4,6 +4,8 @@ import express from 'express';
 import morganMiddleware from './logger/morganMiddleware.js';
 import routes from './routes/routes.js';
 import { initCrypto, KeyPairType, VirgilCrypto } from "virgil-crypto";
+import { AccountDetailsMocks } from "./mocks/accountDetailsMocks.js";
+import { ProfileDetailsMocks } from "./mocks/profileDetailsMocks.js";
 dotenv.config();
 const app = express();
 (async () => {
@@ -11,8 +13,11 @@ const app = express();
     await initCrypto();
     const virgilCrypto = new VirgilCrypto({ defaultKeyPairType: KeyPairType.ED25519 });
     const keyPair = virgilCrypto.generateKeys(KeyPairType.ED25519);
+    //set global app variables
     app.set('keyPair', keyPair);
     app.set('virgilCrypto', virgilCrypto);
+    app.set('accountDetails', JSON.parse(AccountDetailsMocks));
+    app.set('profileInfo', JSON.parse(ProfileDetailsMocks));
     // use custom middlewares for logs and json convert
     app.use(cors());
     app.use(express.json());
@@ -22,7 +27,7 @@ const app = express();
     app.get('/', (req, res) => {
         res.send('Application is running');
     });
-    app.listen(process.env.PORT, () => {
+    app.listen('3002', () => {
         console.log('server is running');
     });
 })();

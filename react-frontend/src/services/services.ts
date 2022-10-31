@@ -23,7 +23,7 @@ class BackedService {
 
 
 	private axios: Axios = new Axios({
-		transformResponse: res => JSON.parse(res as unknown as string),
+		//transformResponse: res => JSON.parse(res as unknown as string),
 		transformRequest: req => JSON.stringify(req),
 		transitional: {
 			silentJSONParsing: false
@@ -49,40 +49,53 @@ class BackedService {
 
 	public async login() {
 		console.log('POST /login get public server key')
-		await this.axios.post<any>('login', this.virgilCrypto.exportPublicKey(this.keyPair.publicKey))
+		await this.axios.post<any>('login', { key: this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64') })
 			.then(value => {
-				this.serverPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(value.data, 'base64'));
-				console.log('POST /login response server public key', this.serverPublicKey);
+				const converted = JSON.parse(value.data);
+				console.log('POST /login response server public key', converted.key);
+				this.serverPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
 			});
 	}
 
 	public async getProfileDetails(): Promise<ProfileDetails> {
 		return await this.axios.post<any>('get-profile-details')
 			.then((value) => {
-				console.log('POST /get-profile-details no body response data before decrypt ->', '' + value.data.data);
-				const decryptedBuffer = this.virgilCrypto.decryptThenVerify(NodeBuffer.from(value.data, 'utf-8'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey]);
-				console.log('POST /get-profile-details no body response data after decrypt ->', decryptedBuffer.toString());
-				return JSON.parse(decryptedBuffer.toString()) as unknown as ProfileDetails;
+				const converted = JSON.parse(value.data);
+				console.log('POST /get-profile-details no body response data before decrypt ->', '' + converted.data);
+				const decryptedBuffer =
+					this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
+						.toString('utf-8');
+				console.log('POST /get-profile-details no body response data after decrypt ->', decryptedBuffer);
+				return JSON.parse(decryptedBuffer) as unknown as ProfileDetails;
 			});
 	}
 
 	public async getAccountDetails(id?: string): Promise<AccountDetails> {
 		return await this.axios.post<string>('get-account-details', id)
 			.then((value) => {
-				const decryptedBuffer = this.virgilCrypto.decryptThenVerify(NodeBuffer.from(value.data, 'utf-8'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey]);
-				return JSON.parse(decryptedBuffer.toString()) as unknown as AccountDetails;
+				const converted = JSON.parse(value.data);
+				console.log('POST /get-account-details before decrypt', converted.data);
+				const decryptedBuffer =
+					this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
+						.toString('utf-8');
+				console.log('POST /get-account-details after decrypt', decryptedBuffer);
+				return JSON.parse(decryptedBuffer) as unknown as AccountDetails;
 		});
 	}
 
-	public async getTransaction(filter?: Filter): Promise<{id: string}> {
+	public async getTransaction(filter?: Filter): Promise<{id: string} | string> {
 		console.log('POST /transaction request data before encrypt', filter);
-		const encryptedFilter = this.virgilCrypto.signThenEncrypt(NodeBuffer.from(JSON.stringify(filter), 'utf-8'), this.keyPair.privateKey, this.serverPublicKey)
+		console.log(JSON.stringify(filter));
+		const encryptedFilter = this.virgilCrypto.signThenEncrypt(JSON.stringify(filter), this.keyPair.privateKey, this.serverPublicKey).toString('base64')
 		console.log('POST /transaction request data after encrypt', encryptedFilter);
-		return await this.axios.post<any>('transaction', encryptedFilter).then((value) => {
-			console.log('POST /transaction response data before decrypt ->', '' + value.data.data);
-			const decryptedBuffer = this.virgilCrypto.decryptThenVerify(NodeBuffer.from(value.data, 'utf-8'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey]);
+		return await this.axios.post<any>('transaction', {info: encryptedFilter}).then((value) => {
+			const converted = JSON.parse(value.data);
+			console.log('POST /transaction response data before decrypt ->', '' + converted.data);
+			const decryptedBuffer =
+				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
+					.toString('utf-8');
 			console.log('POST /transaction response data after decrypt ->', '' + decryptedBuffer.toString());
-			return JSON.parse(decryptedBuffer.toString()) as unknown as {id: string};
+			return JSON.parse(decryptedBuffer) as unknown as {id: string};
 		});
 	}
 }

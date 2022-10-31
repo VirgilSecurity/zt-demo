@@ -3,7 +3,7 @@ export interface ProfileDetails {
 	accounts: Accounts[],
 }
 
-export type Currency = 'USD' | 'RUB' | 'EUR';
+export type Currency = 'USD' | 'EUR';
 
 export interface Accounts {
 	id: string;

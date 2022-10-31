@@ -13,6 +13,10 @@ import {
 	VirgilCrypto,
 	VirgilKeyPair
 } from "virgil-crypto";
+import { AccountDetailsMocks } from "./mocks/accountDetailsMocks.js";
+import { AccountDetails } from "./interfaces/account.interface.js";
+import { ProfileDetailsMocks } from "./mocks/profileDetailsMocks.js";
+import { ProfileDetails } from "./interfaces/profile.interface.js";
 
 
 dotenv.config();
@@ -25,8 +29,12 @@ const app: Express = express();
 	await initCrypto();
 	const virgilCrypto = new VirgilCrypto({ defaultKeyPairType: KeyPairType.ED25519})
 	const keyPair: VirgilKeyPair = virgilCrypto.generateKeys(KeyPairType.ED25519);
+
+	//set global app variables
 	app.set('keyPair', keyPair);
 	app.set('virgilCrypto', virgilCrypto);
+	app.set('accountDetails', JSON.parse(AccountDetailsMocks) as unknown as AccountDetails);
+	app.set('profileInfo', JSON.parse(ProfileDetailsMocks) as unknown as ProfileDetails);
 
 
 	// use custom middlewares for logs and json convert

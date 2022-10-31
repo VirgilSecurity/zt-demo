@@ -19,6 +19,7 @@ import {
 } from '../styled.components';
 import {
 	AccountDetails,
+	Currency,
 	Transactions
 } from "../../constants/profile.interface";
 import {
@@ -33,10 +34,11 @@ const Transaction = () => {
 	const [filters, setFilters] = useState<Filter>({
 		from: "555-555-555-55",
 		to: '234-234-234-234',
+		currency: 'EUR',
 		amount: 0,
 	});
 	const [transactions, setTransactions] = useState<Transactions[]>([])
-	const handleChange = (value: {to: string} | {amount: number}) => {
+	const handleChange = (value: {to: string} | {amount: number} | {currency: Currency}) => {
 		setFilters((oldValue) => ({
 			...oldValue,
 			...value
@@ -62,6 +64,13 @@ const Transaction = () => {
 						<TransactionsLabel>To:</TransactionsLabel>
 						<select>
 							<option value='234-234-234-234' onSelect={(e) => handleChange({to: e.currentTarget.value})}>234-234-234-234</option>
+						</select>
+					</TransactionsItem>
+					<TransactionsItem>
+						<TransactionsLabel>Currency:</TransactionsLabel>
+						<select>
+							<option value='EUR' onSelect={(e) => handleChange({to: e.currentTarget.value})}>EUR</option>
+							<option value='USD' onSelect={(e) => handleChange({currency: e.currentTarget.value as Currency})}>USD</option>
 						</select>
 					</TransactionsItem>
 					<TransactionsItem>

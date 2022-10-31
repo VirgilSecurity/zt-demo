@@ -1,48 +1,80 @@
 import {
-	Response,
-	Request
+	Request,
+	Response
 } from 'express';
-import { ProfileDetails } from '../interfaces/profile.interface.js';
-import { ProfileDetailsMocks } from '../mocks/profileDetailsMocks.js';
-import { AccountDetails } from '../interfaces/account.interface.js';
-import { AccountDetailsMocks } from '../mocks/accountDetailsMocks.js';
-import { Filter } from "../interfaces/filter.interface.js";
+import {
+	Accounts,
+	ProfileDetails
+} from '../interfaces/profile.interface.js';
+import {
+	AccountDetails,
+} from '../interfaces/account.interface.js';
 import { VirgilPrivateKey } from "virgil-crypto/dist/types/VirgilPrivateKey";
+import { NodeBuffer } from "@virgilsecurity/data-utils";
+import { Filter } from "../interfaces/filter.interface";
 
 
 class MainRouterController {
 
-	async getNewPublicKey(req: Request<VirgilPrivateKey>, res: Response<VirgilPrivateKey>) {
-		const key =  req.app.get('virgilCrypto').importPublicKey(Buffer.from(req.body, 'base64'));
+	async getNewPublicKey(req: Request<{key: VirgilPrivateKey}>, res: Response<{key: VirgilPrivateKey}>) {
+		const key =  req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(req.body.key, 'base64'));
 		req.app.set('clientPublicKey', key);
 		const keys = req.app.get('keyPair');
-		const response = req.app.get('virgilCrypto').exportPublicKey(keys.publicKey);
-		res.json(response);
+		const response = req.app.get('virgilCrypto').exportPublicKey(keys.publicKey).toString('base64');
+		res.json({key: response});
 	}
 
-	async getProfileDetails(req: Request, res: Response<ProfileDetails>) {
+	async getProfileDetails(req: Request, res: Response<{data: ProfileDetails}>) {
 		const keys = req.app.get('keyPair');
 		const publicKey = req.app.get('clientPublicKey');
+		const profileInfo = req.app.get('profileInfo');
 		const response = req.app.get('virgilCrypto')
-			.signThenEncrypt(Buffer.from(ProfileDetailsMocks, 'utf-8'), keys.privateKey, publicKey)
-		res.json(response);
+			.signThenEncrypt(JSON.stringify(profileInfo), keys.privateKey, publicKey).toString('base64')
+		res.json({data: response});
 	}
 
-	async getAccountDetails(req: Request<{id: string}>, res: Response<AccountDetails>) {
+	async getAccountDetails(req: Request<{id: string}>, res: Response<{data: AccountDetails}>) {
 		const keys = req.app.get('keyPair');
-		const publicKey = req.app.get('clientPublicKey');
+		const publicKey = req.app.get('clientPublicKey')
+		const accountDetails = req.app.get('accountDetails');
 		const response = req.app.get('virgilCrypto')
-			.signThenEncrypt(Buffer.from(AccountDetailsMocks, 'utf-8'), keys.privateKey, publicKey)
-		res.json(response);
+			.signThenEncrypt(JSON.stringify(accountDetails), keys.privateKey, publicKey).toString('base64')
+		res.json({data: response});
 	}
 
-	async getTransaction(req: Request<Filter>, res: Response<{id: string}>) {
+	async getTransaction(req: Request<{info: string}>, res: Response<{data: {id: string}}>) {
+		const vigrilSecurity = req.app.get('virgilCrypto');
 		const keys = req.app.get('keyPair');
 		const publicKey = req.app.get('clientPublicKey');
-		const response = req.app.get('virgilCrypto')
-			.signThenEncrypt(Buffer.from('{"id": "555-555-555-555"}', 'utf-8'), keys.privateKey, publicKey)
-		res.json(response);
+		const newTransaction = JSON.parse(vigrilSecurity
+			.decryptThenVerify(NodeBuffer.from(req.body.info, 'base64'), keys.privateKey, [keys.publicKey, publicKey])
+			.toString('utf-8')) as Filter;
+		let profileInfo = req.app.get('profileInfo') as ProfileDetails;
+		const currency: Accounts = profileInfo.accounts.find((value) => value.currency === newTransaction.currency)!;
+		const accountDetails = req.app.get('accountDetails') as AccountDetails;
+		accountDetails.transactions.push({
+			createdDate: createdDate(),
+			amount: newTransaction.amount + '',
+			type: +currency.balance - newTransaction.amount > 0 ? 'DEBIT' : 'CREDIT'
+		});
+		currency.balance ='' + (+currency.balance - newTransaction.amount);
+		profileInfo = {... profileInfo, ...currency};
+		req.app.set('accountDetails', accountDetails);
+		req.app.set('profileInfo', profileInfo);
+		const response = vigrilSecurity
+			.signThenEncrypt('{"id":"555-555-555-555"}', keys.privateKey, publicKey).toString('base64')
+		return res.json({ data: response } );
 	}
+}
+
+function createdDate(): string {
+	const date = new Date();
+	const day = date.getDate() > 9 ? '0' + date.getDate() : date.getDate();
+	const month = date.getMonth() + 1 > 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+	const year = date.getFullYear();
+	const hours = date.getHours() > 9 ? '0' + date.getHours() : date.getHours();
+	const minutes = date.getMinutes() > 9 ? '0' + date.getMinutes() : date.getMinutes();
+	return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
 }
 
 

@@ -38,7 +38,7 @@ const Profile = () => {
 				<ProfileListItem key='0'>
 					<DivFlexJustify>
 						<ProfileCell>
-							Payment Date
+							Created Date
 						</ProfileCell>
 						<ProfileCell>
 							Current Balance
