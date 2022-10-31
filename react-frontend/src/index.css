@@ -44,3 +44,8 @@ textarea {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.greenBg {
+  background-color: green !important;
+  box-shadow: 0 0 12px #4e62c0;
+}

@@ -23,3 +23,5 @@ export interface Transactions {
 	amount: string,
 	type:TransactionType,
 }
+
+// export interface buttonBg: boolean

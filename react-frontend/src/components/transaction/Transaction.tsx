@@ -9,6 +9,7 @@ import {
 	MenuButtonHeader
 } from "../styled.components";
 import { Filter } from "../../constants/filters.inteface";
+// import { buttonBg } from "../../constants/profile.interface";
 import BackendService from "../../services/services";
 import {
 	TransactionsWrapper,
@@ -28,6 +29,7 @@ import {
 
 
 const Transaction = () => {
+	const [backgroundButton, setBackground] = useState<boolean>(false);
 	const [filters, setFilters] = useState<Filter>({
 		from: "555-555-555-55",
 		to: '234-234-234-234',
@@ -41,7 +43,11 @@ const Transaction = () => {
 		}))
 	};
 	const doTransaction = () => {
-		BackendService.getTransaction(filters)
+		BackendService.getTransaction(filters);
+		setBackground(true);
+		setTimeout(() => {
+			setBackground(false);
+		}, 1000);
 	}
 	useEffect(() => {
 		BackendService.getAccountDetails().then((value: AccountDetails) => {
@@ -62,7 +68,7 @@ const Transaction = () => {
 						<TransactionsLabel>Sum of transaction:</TransactionsLabel>
 						<input placeholder='Sum' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
 					</TransactionsItem>
-					<MenuButtonHeader onClick={doTransaction}>Create Transaction</MenuButtonHeader>
+					<MenuButtonHeader className={backgroundButton ? 'greenBg' : ''} onClick={doTransaction}>Create Transaction</MenuButtonHeader>
 				</TransactionsWrapper>
 			</DivFlexBox>
 			<DivFlexBox>
