@@ -57,6 +57,7 @@ class MainRouterController {
 				accountDetails.transactions.push({
 					createdDate: createdDate(),
 					amount: newTransaction.amount + '',
+					currency: newTransaction.currency,
 					type: 'DEBIT'
 				});
 				value.balance ='' + ((+value.balance - newTransaction.amount).toFixed(2));

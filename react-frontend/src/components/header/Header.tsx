@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, {
+	useEffect,
+	useState
+} from 'react';
 import {
 	DivFlexBox,
 	HeaderWrapper,
@@ -19,6 +22,9 @@ const Header = () => {
 			navigate('/profile');
 		});
 	}
+	useEffect(() => {
+		!isLogged && navigate('/')
+	}, [])
 	return (
 		<>
 			<DivFlexBox>

@@ -21,6 +21,7 @@ export type TransactionType = 'DEBIT' | 'CREDIT';
 export interface Transactions {
 	createdDate: string,
 	amount: string,
+	currency: Currency,
 	type:TransactionType,
 }
 

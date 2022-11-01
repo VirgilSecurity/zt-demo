@@ -106,7 +106,7 @@ const Transaction = () => {
 					<ProfileListItem>
 						<DivFlexJustify>
 							<ProfileCell>
-								Operation type
+								Currency type
 							</ProfileCell>
 							<ProfileCell>
 								Operation amount
@@ -120,7 +120,7 @@ const Transaction = () => {
 						return (<ProfileListItem key={index}>
 									<DivFlexJustify>
 										<ProfileCell>
-											{value.type}
+											{value.currency}
 										</ProfileCell>
 										<ProfileCell>
 											{value.amount}
