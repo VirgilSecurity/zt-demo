@@ -107,7 +107,7 @@ const Transaction = () => {
 						/>
 						<TransactionsLabel style={{display: inputError ? 'flex' : 'none', color: 'red'}}>Error: We need only numbers!</TransactionsLabel>
 					</TransactionsItem>
-					<MenuButtonHeader className={isLoading ? 'greenBg' : ''} onClick={doTransaction}>Create Transaction</MenuButtonHeader>
+					<MenuButtonHeader className={isLoading ? 'greenBg' : ''} onClick={doTransaction} disabled={inputError}>Create Transaction</MenuButtonHeader>
 					<TransactionsLabel style={{display: error.isError ? 'flex' : 'none', color: 'red'}}>Error: {error.errorText}</TransactionsLabel>
 				</TransactionsWrapper>
 			</DivFlexBox>
