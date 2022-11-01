@@ -15,7 +15,7 @@ import { NodeBuffer } from "@virgilsecurity/data-utils";
 
 
 class BackedService {
-	private _url: string = 'http://localhost:3002/api/';
+	private _url: string = 'http://' + new URL(window.location.href).host.slice(0, new URL(window.location.href).host.indexOf(':')) + ':3002/api';
 
 	private virgilCrypto: VirgilCrypto;
 	private keyPair: VirgilKeyPair;
@@ -36,6 +36,7 @@ class BackedService {
 	})
 
 	constructor() {
+		console.log(this._url);
 		this.createCryptoInstance()
 			.then(() => console.log('Successfully Initialize Crypto Module'));
 	}

@@ -40,7 +40,7 @@ class MainRouterController {
                     amount: newTransaction.amount + '',
                     type: 'DEBIT'
                 });
-                value.balance = '' + (+value.balance - newTransaction.amount);
+                value.balance = '' + ((+value.balance - newTransaction.amount).toFixed(2));
                 flag = false;
             }
         });
