@@ -10,7 +10,7 @@ import {
 	MenuButtonLinkHeader
 } from '../styled.components';
 import BackendService from "../../services/services";
-import { Router, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 
 const Header = () => {

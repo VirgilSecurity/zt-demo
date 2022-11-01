@@ -25,6 +25,7 @@ import {
 	TransactionsWrapper
 } from '../styled.components';
 import LoadingOverlayWrapper from "react-loading-overlay-ts";
+import { isNumber } from "util";
 
 
 const Transaction = () => {
@@ -32,6 +33,7 @@ const Transaction = () => {
 		isError: false,
 		errorText: ''
 	})
+	const [inputError, setInputError] = useState<boolean>(false);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [filters, setFilters] = useState<Filter>({
 		from: "555-555-555-55",
@@ -94,7 +96,16 @@ const Transaction = () => {
 					</TransactionsItem>
 					<TransactionsItem>
 						<TransactionsLabel>Sum of transaction:</TransactionsLabel>
-						<input placeholder='Sum' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
+						<input placeholder='Sum' type="text" pattern="[0-9]*" onInput={(e) => {
+							if (isNaN(+e.currentTarget.value)) {
+								setInputError(true);
+							} else {
+								setInputError(false)
+								handleChange({amount: +e.currentTarget.value})}
+							}
+						}
+						/>
+						<TransactionsLabel style={{display: inputError ? 'flex' : 'none', color: 'red'}}>Error: We need only numbers!</TransactionsLabel>
 					</TransactionsItem>
 					<MenuButtonHeader className={isLoading ? 'greenBg' : ''} onClick={doTransaction}>Create Transaction</MenuButtonHeader>
 					<TransactionsLabel style={{display: error.isError ? 'flex' : 'none', color: 'red'}}>Error: {error.errorText}</TransactionsLabel>
