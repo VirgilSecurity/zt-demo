@@ -28,6 +28,10 @@ import LoadingOverlayWrapper from "react-loading-overlay-ts";
 
 
 const Transaction = () => {
+	const [error, setError] = useState<{isError: boolean, errorText: string}>({
+		isError: false,
+		errorText: ''
+	})
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [filters, setFilters] = useState<Filter>({
 		from: "555-555-555-55",
@@ -43,16 +47,24 @@ const Transaction = () => {
 		}))
 	};
 	const doTransaction = () => {
+		console.clear();
 		setIsLoading(true);
-		BackendService.getTransaction(filters).then(() => {
+		BackendService.getTransaction(filters).then((value) => {
+			if (typeof value === "string") {
+				setError({isError: true, errorText: value})
+				setIsLoading(false);
+				return;
+			}
 			callTable();
 		});
 	}
 	useEffect(() => {
+		console.clear()
 		callTable();
 	}, [])
 	const callTable = () => {
-		BackendService.getAccountDetails().then((value: AccountDetails) => {
+		setError({isError: false, errorText: ''})
+		BackendService.getAccountDetails('555-555-555-555').then((value: AccountDetails) => {
 			setTransactions(value.transactions);
 			setIsLoading(false);
 		})
@@ -85,6 +97,7 @@ const Transaction = () => {
 						<input placeholder='Sum' onInput={(e) => handleChange({amount: +e.currentTarget.value})}/>
 					</TransactionsItem>
 					<MenuButtonHeader className={isLoading ? 'greenBg' : ''} onClick={doTransaction}>Create Transaction</MenuButtonHeader>
+					<TransactionsLabel style={{display: error.isError ? 'flex' : 'none', color: 'red'}}>Error: {error.errorText}</TransactionsLabel>
 				</TransactionsWrapper>
 			</DivFlexBox>
 			<DivFlexBox>

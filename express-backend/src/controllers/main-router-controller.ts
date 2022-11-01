@@ -50,21 +50,27 @@ class MainRouterController {
 			.decryptThenVerify(NodeBuffer.from(req.body.info, 'base64'), keys.privateKey, [keys.publicKey, publicKey])
 			.toString('utf-8')) as Filter;
 		let profileInfo = req.app.get('profileInfo') as ProfileDetails;
-		console.log(profileInfo);
+		let flag = true;
 		const accountDetails = req.app.get('accountDetails') as AccountDetails;
 		profileInfo.accounts.forEach((value) => {
-			if (value.currency === newTransaction.currency) {
+			if (value.currency === newTransaction.currency && +value.balance - newTransaction.amount > 0) {
 				accountDetails.transactions.push({
 					createdDate: createdDate(),
 					amount: newTransaction.amount + '',
-					type: +value.balance - newTransaction.amount > 0 ? 'DEBIT' : 'CREDIT'
+					type: 'DEBIT'
 				});
 				value.balance ='' + (+value.balance - newTransaction.amount);
+				flag = false;
 			}
 		})
-		console.log(profileInfo);
 		req.app.set('accountDetails', accountDetails);
 		req.app.set('profileInfo', profileInfo);
+		if (flag) {
+			res.status(404);
+			const response = vigrilSecurity
+				.signThenEncrypt('No such big money!', keys.privateKey, publicKey).toString('base64')
+			return res.json({ data: response } );
+		}
 		const response = vigrilSecurity
 			.signThenEncrypt('{"id":"555-555-555-555"}', keys.privateKey, publicKey).toString('base64')
 		return res.json({ data: response } );

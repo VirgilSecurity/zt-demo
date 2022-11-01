@@ -49,7 +49,7 @@ class BackedService {
 
 	public async login() {
 		console.clear();
-		console.log('POST /login get public server key')
+		console.log('POST /login get public server key request body ->', { key: this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64') })
 		await this.axios.post<any>('login', { key: this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64') })
 			.then(value => {
 				const converted = JSON.parse(value.data);
@@ -72,15 +72,17 @@ class BackedService {
 			});
 	}
 
-	public async getAccountDetails(id?: string): Promise<AccountDetails> {
-		return await this.axios.post<string>('get-account-details', id)
+	public async getAccountDetails(id: string): Promise<AccountDetails> {
+		const encryptedId = this.virgilCrypto.signThenEncrypt(id, this.keyPair.privateKey, this.serverPublicKey).toString('base64')
+		console.log('POST /get-account-details after encrypt ->', encryptedId);
+		return await this.axios.post<string>('get-account-details', {info : encryptedId})
 			.then((value) => {
 				const converted = JSON.parse(value.data);
-				console.log('POST /get-account-details before decrypt', converted.data);
+				console.log('POST /get-account-details before decrypt ->', converted.data);
 				const decryptedBuffer =
 					this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
 						.toString('utf-8');
-				console.log('POST /get-account-details after decrypt', decryptedBuffer);
+				console.log('POST /get-account-details after decrypt ->', decryptedBuffer);
 				return JSON.parse(decryptedBuffer) as unknown as AccountDetails;
 		});
 	}
@@ -97,6 +99,10 @@ class BackedService {
 			const decryptedBuffer =
 				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
 					.toString('utf-8');
+			if (value.status === 404) {
+				console.log('POST /transaction response data after decrypt ->', '' + decryptedBuffer);
+				return decryptedBuffer;
+			}
 			console.log('POST /transaction response data after decrypt ->', '' + decryptedBuffer.toString());
 			return JSON.parse(decryptedBuffer) as unknown as {id: string};
 		});
