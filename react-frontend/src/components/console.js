@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react'
-import { Console, Hook, Unhook } from 'console-feed'
+import {Console, Decode, Hook, Unhook} from 'console-feed'
 import styles from './styles.module.css';
 
-const LogsContainer = () => {
-    const [logs, setLogs] = useState([])
+export class LogContainer extends React.Component {
+    state = {
+        logs: [],
+    }
 
-    // run once!
-    useEffect(() => {
-        Hook(window.console, log => setLogs(currLogs => [...currLogs, log]), false)
-        return () => Unhook(window.console)
-    }, [])
+    componentDidMount() {
+        Hook(window.console, (log) => {
+            if (log[0].method === 'clear') {
+                this.setState(() => ({ logs : [] }))
+            } else {
+                this.setState(({ logs }) => ({ logs: [...logs, Decode(log)] }))
+            }
+        }, true, 100)
+    }
 
-    return <div className={styles.console} style={{width: "100%", backgroundColor: "black"}}>
-        <Console logs={logs} variant="dark" />
-    </div>
+    render() {
+        return (
+            <div className={styles.console} style={{backgroundColor: 'black'}}>
+                <Console logs={this.state.logs} variant="dark" />
+            </div>
+        )
+    }
 }
-
-export { LogsContainer }

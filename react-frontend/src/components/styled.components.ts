@@ -43,12 +43,12 @@ export const DivFlexBoxColumn = styled.div`
 `
 
 export const MenuButtonLinkHeader = styled(Link)`
-  padding: 8px 16px;
+  padding: 16px 24px;
   text-decoration: none;
   background: #4E62C0;
   border-radius: 150px;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 22px;
   cursor: pointer;
   transition: .2s ease-out;
 
@@ -62,12 +62,12 @@ export const MenuButtonLinkHeader = styled(Link)`
 `
 
 export const MenuButtonHeader = styled.button`
-  padding: 8px 16px;
+  padding: 16px 24px;
   text-decoration: none;
   background: #4E62C0;
   border-radius: 150px;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 22px;
   margin-left: auto;
   cursor: pointer;
   transition: .2s ease-out;

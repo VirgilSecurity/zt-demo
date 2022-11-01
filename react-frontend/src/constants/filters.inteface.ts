@@ -4,6 +4,6 @@ import { Currency } from "./profile.interface";
 export interface Filter {
 	from: string;
 	to: string;
-	currency: Currency;
+	currency: string;
 	amount: number;
 }

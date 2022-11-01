@@ -31,15 +31,19 @@ class MainRouterController {
             .decryptThenVerify(NodeBuffer.from(req.body.info, 'base64'), keys.privateKey, [keys.publicKey, publicKey])
             .toString('utf-8'));
         let profileInfo = req.app.get('profileInfo');
-        const currency = profileInfo.accounts.find((value) => value.currency === newTransaction.currency);
+        console.log(profileInfo);
         const accountDetails = req.app.get('accountDetails');
-        accountDetails.transactions.push({
-            createdDate: createdDate(),
-            amount: newTransaction.amount + '',
-            type: +currency.balance - newTransaction.amount > 0 ? 'DEBIT' : 'CREDIT'
+        profileInfo.accounts.forEach((value) => {
+            if (value.currency === newTransaction.currency) {
+                accountDetails.transactions.push({
+                    createdDate: createdDate(),
+                    amount: newTransaction.amount + '',
+                    type: +value.balance - newTransaction.amount > 0 ? 'DEBIT' : 'CREDIT'
+                });
+                value.balance = '' + (+value.balance - newTransaction.amount);
+            }
         });
-        currency.balance = '' + (+currency.balance - newTransaction.amount);
-        profileInfo = { ...profileInfo, ...currency };
+        console.log(profileInfo);
         req.app.set('accountDetails', accountDetails);
         req.app.set('profileInfo', profileInfo);
         const response = vigrilSecurity
@@ -49,11 +53,11 @@ class MainRouterController {
 }
 function createdDate() {
     const date = new Date();
-    const day = date.getDate() > 9 ? '0' + date.getDate() : date.getDate();
-    const month = date.getMonth() + 1 > 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
-    const year = date.getFullYear();
-    const hours = date.getHours() > 9 ? '0' + date.getHours() : date.getHours();
-    const minutes = date.getMinutes() > 9 ? '0' + date.getMinutes() : date.getMinutes();
+    const day = +date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+    const month = +date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+    const year = +date.getFullYear();
+    const hours = +date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+    const minutes = +date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     return day + '.' + month + '.' + year + ' ' + hours + ':' + minutes;
 }
 export default new MainRouterController();

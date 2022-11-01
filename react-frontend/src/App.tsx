@@ -9,7 +9,9 @@ import Transaction from "./components/transaction/Transaction";
 import Profile from "./components/profile/Profile";
 import { BrowserRouter } from "react-router-dom";
 import { Wrapper } from "./components/styled.components";
-import { LogsContainer } from "./components/console.js";
+import {
+	LogContainer,
+} from "./components/console.js";
 
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
 					<Route path='/transactions' element={<Transaction/>}/>
 					<Route path='/profile' element={<Profile/>}/>
 				</Routes>
-				<LogsContainer/>
+				<LogContainer/>
 			</Wrapper>
 		</BrowserRouter>
 	);

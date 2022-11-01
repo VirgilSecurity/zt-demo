@@ -49,3 +49,7 @@ textarea {
   background-color: green !important;
   box-shadow: 0 0 12px #4e62c0;
 }
+
+.loader {
+  width: 100%;
+}

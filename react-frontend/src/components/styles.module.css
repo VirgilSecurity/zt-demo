@@ -1,6 +1,6 @@
 .console {
   position: absolute;
   left: 0;
-  bottom: 0;
+  top: 90%;
   width: 100%;
 }

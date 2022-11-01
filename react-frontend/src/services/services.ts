@@ -48,6 +48,7 @@ class BackedService {
 	}
 
 	public async login() {
+		console.clear();
 		console.log('POST /login get public server key')
 		await this.axios.post<any>('login', { key: this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64') })
 			.then(value => {
@@ -58,6 +59,7 @@ class BackedService {
 	}
 
 	public async getProfileDetails(): Promise<ProfileDetails> {
+		console.clear();
 		return await this.axios.post<any>('get-profile-details')
 			.then((value) => {
 				const converted = JSON.parse(value.data);
@@ -84,6 +86,7 @@ class BackedService {
 	}
 
 	public async getTransaction(filter?: Filter): Promise<{id: string} | string> {
+		console.clear();
 		console.log('POST /transaction request data before encrypt', filter);
 		console.log(JSON.stringify(filter));
 		const encryptedFilter = this.virgilCrypto.signThenEncrypt(JSON.stringify(filter), this.keyPair.privateKey, this.serverPublicKey).toString('base64')
