@@ -30,8 +30,21 @@ const TransactionsChartComponent = (props : {data: TransactionsChart[]}) => {
 			title: {
 				display: true,
 				text: 'Transactions',
+				color: "#fff",
 			},
 		},
+		scales: {
+      y: {
+        ticks: {
+          color: '#fff',
+        }
+      },
+			x: {
+        ticks: {
+          color: '#fff',
+        }
+      }
+    }
 	};
 	const data = {
 		labels : props.data.map((value) => value.createdDate),
@@ -39,13 +52,14 @@ const TransactionsChartComponent = (props : {data: TransactionsChart[]}) => {
 			{
 				label: 'Transactions',
 				data: props.data.map((value) => value.count),
-				backgroundColor: 'rgba(255, 99, 132, 0.5)',
+				backgroundColor: '#4E62C0',
+				bodyFontColor: "#fff"
 			}
-		]
+		],
 	};
 
 	return (
-	<div style={{width: '100%', backgroundColor: 'white'}}>
+	<div style={{width: '100%'}}>
 		<Bar data={data} options={options}/>
 	</div>
 	);

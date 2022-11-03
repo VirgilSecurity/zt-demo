@@ -1,5 +1,5 @@
 import React from 'react';
-import { DivFlexBox } from '../../styled.components';
+import { DevicesWrapper } from '../../styled.components';
 import { DevicesChart } from "../../../constants/charts.interfaces";
 
 
@@ -8,7 +8,7 @@ const DevicesChartComponent = (props: {data: DevicesChart[]}) => {
 		<>
 			{props.data.map((value) => {
 				return (
-					<DivFlexBox>
+					<DevicesWrapper>
 						<div>
 							{value.name}
 						</div>
@@ -22,7 +22,7 @@ const DevicesChartComponent = (props: {data: DevicesChart[]}) => {
 								</div>
 							))}
 						</div>
-					</DivFlexBox>
+					</DevicesWrapper>
 				)
 			})}
 		</>

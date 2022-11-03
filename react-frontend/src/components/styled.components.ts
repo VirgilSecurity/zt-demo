@@ -7,10 +7,11 @@ export const Wrapper = styled.div`
   box-sizing: border-box;
   margin: 0 auto;
   max-width: 1200px;
-  min-height: calc(100vh - 69px);
+  min-height: calc(100vh - 192px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 32px 0;
 `
 
 export const DivFlexBox = styled.div`
@@ -43,12 +44,12 @@ export const DivFlexBoxColumn = styled.div`
 `
 
 export const MenuButtonLinkHeader = styled(Link)`
-  padding: 16px 24px;
+  padding: 8px 24px;
   text-decoration: none;
   background: #4E62C0;
   border-radius: 150px;
   color: #ffffff;
-  font-size: 22px;
+  font-size: 18px;
   cursor: pointer;
   transition: .2s ease-out;
 
@@ -62,12 +63,12 @@ export const MenuButtonLinkHeader = styled(Link)`
 `
 
 export const MenuButtonHeader = styled.button`
-  padding: 16px 24px;
+  padding: 8px 24px;
   text-decoration: none;
   background: #4E62C0;
   border-radius: 150px;
   color: #ffffff;
-  font-size: 22px;
+  font-size: 18px;
   margin-left: auto;
   cursor: pointer;
   transition: .2s ease-out;
@@ -198,7 +199,7 @@ export const DashboardContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: start;
-  align-items: center;
+  align-items: flex-start;
   flex: 1 2 0;
 `
 
@@ -208,6 +209,7 @@ export const DashboardLeftMenu = styled.div`
   flex-direction: column;
   align-items: self-start;
   justify-content: start;
+  gap: 16px;
 `
 
 export const DashboardRightMenu = styled.div`
@@ -216,6 +218,31 @@ export const DashboardRightMenu = styled.div`
   flex-direction: column;
   align-items: self-start;
   justify-content: start;
+  background-color: #141B41;
+  border-radius: 24px;
+  padding: 24px;
+  color: #ffffff;
+
+  & > div {
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th {
+    text-align: left;
+    padding: 8px 0;
+  }
+
+  td {
+    padding: 8px 0;
+  }
+
+  img {
+    max-width:32px;
+  }
 `
 
 export const DashboardButton = styled.button`
@@ -229,9 +256,23 @@ export const DashboardButton = styled.button`
   cursor: pointer;
   transition: .2s ease-out;
   min-width: 180px;
-  margin-top: 24px;
 
   &:hover {
     box-shadow: 0 0 12px #4E62C0;
   }
 `
+
+export const DevicesWrapper = styled.div`
+  display: flex;
+  border-bottom: 1px solid #ffffff;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  & > div {
+    display: flex;
+    padding: 16px 0;
+    width: 33.33%;
+  }
+`;
