@@ -2,9 +2,9 @@ import React from 'react';
 import {
 	ApplicationChart,
 } from "../../../constants/charts.interfaces";
-import greenLock from '../../../images/green.png';
-import yellowLock from '../../../images/yellow.png';
-import redLock from '../../../images/red.png';
+import greenLock from '../../../images/green.svg';
+import yellowLock from '../../../images/yellow.svg';
+import redLock from '../../../images/red.svg';
 import { Table } from "../utils/table.template";
 
 function chooseImg (str: string) {
@@ -24,6 +24,7 @@ const ApplicationChartComponent = (props: {data: ApplicationChart[]}) => {
 		{Header: "Application URL", accessor: "url"},
 		{Header: "Rules Assigned", accessor: "assignedRules"},
 		{Header: "Is encrypted", accessor: "status", Cell: (tableProps: any) => (
+			// eslint-disable-next-line jsx-a11y/alt-text
 			<img
 				src={chooseImg(tableProps.row.original.status)}
 				width='50px'
