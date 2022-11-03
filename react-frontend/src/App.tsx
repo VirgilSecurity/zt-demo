@@ -12,6 +12,7 @@ import { Wrapper } from "./components/styled.components";
 import {
 	LogContainer,
 } from "./components/console.js";
+import Dashboard from "./components/charts/Dashboard";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
 					<Route path='/' element={<Home/>}/>
 					<Route path='/transactions' element={<Transaction/>}/>
 					<Route path='/profile' element={<Profile/>}/>
+					<Route path='/dashboard' element={<Dashboard/>}/>
 				</Routes>
 				<LogContainer/>
 			</Wrapper>

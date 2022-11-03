@@ -7,7 +7,13 @@ declare class MainRouterController {
         key: VirgilPrivateKey;
     }>, res: Response<{
         key: VirgilPrivateKey;
-    }>): Promise<void>;
+    } | {
+        message: string;
+    }>): Promise<Response<{
+        key: VirgilPrivateKey;
+    } | {
+        message: string;
+    }, Record<string, any>> | undefined>;
     getProfileDetails(req: Request, res: Response<{
         data: ProfileDetails;
     }>): Promise<void>;
@@ -27,6 +33,9 @@ declare class MainRouterController {
             id: string;
         };
     }, Record<string, any>>>;
+    chartData(req: Request, res: Response<{
+        info: string;
+    }>): Promise<void>;
 }
 declare const _default: MainRouterController;
 export default _default;

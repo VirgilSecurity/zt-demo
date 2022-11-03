@@ -12,6 +12,7 @@ import {
 } from "virgil-crypto";
 import { VirgilKeyPair } from "virgil-crypto/dist/types/types";
 import { NodeBuffer } from "@virgilsecurity/data-utils";
+import { ChartResponse } from "../constants/charts.interfaces";
 
 
 class BackedService {
@@ -107,6 +108,19 @@ class BackedService {
 			console.log('POST /transaction response data after decrypt ->', '' + decryptedBuffer.toString());
 			return JSON.parse(decryptedBuffer) as unknown as {id: string};
 		});
+	}
+
+	public async getCharts(): Promise<ChartResponse> {
+		console.clear()
+		return await this.axios.post<any>('charts').then((value) => {
+			const converted = JSON.parse(value.data);
+			console.log('POST /charts response data before decrypt ->', converted.info);
+			const decryptedBuffer =
+				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.info, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
+					.toString('utf-8');
+			console.log('POST /charts response data after decrypt ->', decryptedBuffer.toString());
+			return JSON.parse(decryptedBuffer) as unknown as ChartResponse;
+		})
 	}
 }
 

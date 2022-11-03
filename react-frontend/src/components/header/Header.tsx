@@ -31,6 +31,7 @@ const Header = () => {
 				<HeaderWrapper>
 					<MenuButtonLink to='/'>Main Page</MenuButtonLink>
 					{isLogged && <MenuButtonLink to='/transactions'>Transactions</MenuButtonLink>}
+					{isLogged && <MenuButtonLink to='/dashboard'>Dashboard</MenuButtonLink>}
 					{
 						!isLogged ? <MenuButtonHeader onClick={login}>Login</MenuButtonHeader> :
 						<MenuButtonLinkHeader to='/profile'>Profile</MenuButtonLinkHeader>

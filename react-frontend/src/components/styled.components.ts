@@ -192,3 +192,46 @@ export const TransactionInfo = styled.div`
   text-align: center;
   gap: 4px;
 `;
+
+export const DashboardContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  flex: 1 2 0;
+`
+
+export const DashboardLeftMenu = styled.div`
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: self-start;
+  justify-content: start;
+`
+
+export const DashboardRightMenu = styled.div`
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: self-start;
+  justify-content: start;
+`
+
+export const DashboardButton = styled.button`
+  padding: 8px 16px;
+  text-decoration: none;
+  background: #4E62C0;
+  border-radius: 150px;
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: medium;
+  cursor: pointer;
+  transition: .2s ease-out;
+  min-width: 180px;
+  margin-top: 24px;
+
+  &:hover {
+    box-shadow: 0 0 12px #4E62C0;
+  }
+`

@@ -12,11 +12,22 @@ import {
 import { VirgilPrivateKey } from "virgil-crypto/dist/types/VirgilPrivateKey";
 import { NodeBuffer } from "@virgilsecurity/data-utils";
 import { Filter } from "../interfaces/filter.interface";
+import {
+	ApplicationChartMocks,
+	DevicesChartMocks,
+	PolicesChartMocks,
+	UsersChartMocks
+} from "../mocks/charMocks.js";
+import { TransactionsChart } from "../interfaces/chart.interface";
 
 
 class MainRouterController {
 
-	async getNewPublicKey(req: Request<{key: VirgilPrivateKey}>, res: Response<{key: VirgilPrivateKey}>) {
+	async getNewPublicKey(req: Request<{key: VirgilPrivateKey}>, res: Response<{key: VirgilPrivateKey} | {message: string}>) {
+		if (!req.body.key) {
+			res.status(404);
+			return res.json({message: "Error, no private key"})
+		}
 		const key =  req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(req.body.key, 'base64'));
 		req.app.set('clientPublicKey', key);
 		const keys = req.app.get('keyPair');
@@ -75,6 +86,40 @@ class MainRouterController {
 		const response = vigrilSecurity
 			.signThenEncrypt('{"id":"555-555-555-555"}', keys.privateKey, publicKey).toString('base64')
 		return res.json({ data: response } );
+	}
+
+	async chartData(req: Request, res: Response<{info: string}>) {
+		const vigrilSecurity = req.app.get('virgilCrypto');
+		const keys = req.app.get('keyPair');
+		const publicKey = req.app.get('clientPublicKey');
+		const accountDetails = req.app.get('accountDetails') as AccountDetails;
+		const applicationData = JSON.parse(ApplicationChartMocks);
+		const policesData = JSON.parse(PolicesChartMocks);
+		const usersData = JSON.parse(UsersChartMocks);
+		const devicesData = JSON.parse(DevicesChartMocks);
+		const dateArray: string[]= [];
+		const transactionsData: TransactionsChart[] = [];
+		accountDetails.transactions.forEach((value) => {
+			if (dateArray.includes(value.createdDate)) {
+				transactionsData.find((transaction) => transaction.createdDate === value.createdDate.split(" ")[0])!.count++
+			} else {
+				transactionsData.push({
+					createdDate: value.createdDate.split(" ")[0],
+					count: 1,
+				})
+				dateArray.push(value.createdDate);
+			}
+		})
+		const collectedData = {
+			application: applicationData,
+			polices: policesData,
+			users: usersData,
+			devices: devicesData,
+			transactions: transactionsData,
+		}
+		const response = vigrilSecurity
+			.signThenEncrypt(JSON.stringify(collectedData), keys.privateKey, publicKey).toString('base64')
+		res.send({info: response});
 	}
 }
 
