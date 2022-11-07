@@ -1,0 +1,16 @@
+version : "1"
+services:
+  express-backend:
+    build: ./express-backend
+    container_name: backend
+    environment:
+      - PORT=3002
+      - NODE_OPTIONS="--experimental-specifier-resolution=node"
+    ports:
+      - 3002:3002
+
+  react-frontend:
+    build: ./react-frontend
+    container_name: frontend
+    ports:
+      - 3000:80
