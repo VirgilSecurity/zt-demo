@@ -19,7 +19,7 @@ const Header = () => {
 		BackendService.login().then(() => {
 			setIsLogged(true);
 			navigate('/profile');
-		});
+		}).catch((value) => console.error(value));
 	}
 	useEffect(() => {
 		!isLogged && navigate('/')

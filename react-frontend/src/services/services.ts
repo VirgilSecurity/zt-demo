@@ -55,6 +55,9 @@ class BackedService {
 		await this.axios.post<any>('login', { key: this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64') })
 			.then(value => {
 				const converted = JSON.parse(value.data);
+				if (!converted.key) {
+					throw new Error('Login error, login again pls');
+				}
 				console.log('POST /login response server public key', converted.key);
 				this.serverPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
 			});
@@ -62,10 +65,16 @@ class BackedService {
 
 	public async getProfileDetails(): Promise<ProfileDetails> {
 		console.clear();
+		if (!this.serverPublicKey) {
+			throw new Error('No server public key');
+		}
 		return await this.axios.post<any>('get-profile-details')
 			.then((value) => {
 				const converted = JSON.parse(value.data);
 				console.log('POST /get-profile-details no body response data before decrypt ->', '' + converted.data);
+				if (!converted.data) {
+					throw new Error('Login error, login again pls');
+				}
 				const decryptedBuffer =
 					this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
 						.toString('utf-8');
@@ -75,12 +84,18 @@ class BackedService {
 	}
 
 	public async getAccountDetails(id: string): Promise<AccountDetails> {
+		if (!this.serverPublicKey) {
+			throw new Error('No server public key');
+		}
 		const encryptedId = this.virgilCrypto.signThenEncrypt(id, this.keyPair.privateKey, this.serverPublicKey).toString('base64')
 		console.log('POST /get-account-details after encrypt ->', encryptedId);
 		return await this.axios.post<string>('get-account-details', {info : encryptedId})
 			.then((value) => {
 				const converted = JSON.parse(value.data);
 				console.log('POST /get-account-details before decrypt ->', converted.data);
+				if (!converted.data) {
+					throw new Error('Login error, login again pls');
+				}
 				const decryptedBuffer =
 					this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
 						.toString('utf-8');
@@ -90,6 +105,9 @@ class BackedService {
 	}
 
 	public async getTransaction(filter?: Filter): Promise<{id: string} | string> {
+		if (!this.serverPublicKey) {
+			throw new Error('No server public key');
+		}
 		console.clear();
 		console.log('POST /transaction request data before encrypt', filter);
 		console.log(JSON.stringify(filter));
@@ -97,6 +115,9 @@ class BackedService {
 		console.log('POST /transaction request data after encrypt', encryptedFilter);
 		return await this.axios.post<any>('transaction', {info: encryptedFilter}).then((value) => {
 			const converted = JSON.parse(value.data);
+			if (!converted.data) {
+				throw new Error('Login error, login again pls');
+			}
 			console.log('POST /transaction response data before decrypt ->', '' + converted.data);
 			const decryptedBuffer =
 				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
@@ -111,9 +132,15 @@ class BackedService {
 	}
 
 	public async getCharts(): Promise<ChartResponse> {
+		if (!this.serverPublicKey) {
+			throw new Error('No server public key');
+		}
 		console.clear()
 		return await this.axios.post<any>('charts').then((value) => {
 			const converted = JSON.parse(value.data);
+			if (!converted.info) {
+				throw new Error('Login error, login again pls');
+			}
 			console.log('POST /charts response data before decrypt ->', converted.info);
 			const decryptedBuffer =
 				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.info, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])

@@ -37,7 +37,7 @@ const Dashboard = () => {
 			setUsers(value.users);
 			setDevices(value.devices);
 			setTransactions(value.transactions);
-		})
+		}).catch((value) => console.error(value))
 	}, [])
 	const ChooseRightComponent = (index: number) => {
 		switch (index) {

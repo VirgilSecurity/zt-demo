@@ -276,3 +276,11 @@ export const DevicesWrapper = styled.div`
     width: 33.33%;
   }
 `;
+
+export const Tags = styled.div`
+  display: flex;
+  background-color: grey;
+  padding: 8px;
+  border-radius: 25px;
+  margin-left: 4px;
+`

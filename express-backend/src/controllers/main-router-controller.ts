@@ -35,28 +35,40 @@ class MainRouterController {
 		res.json({key: response});
 	}
 
-	async getProfileDetails(req: Request, res: Response<{data: ProfileDetails}>) {
+	async getProfileDetails(req: Request, res: Response<{data: ProfileDetails} | {message: string}>) {
 		const keys = req.app.get('keyPair');
 		const publicKey = req.app.get('clientPublicKey');
+		if (!publicKey) {
+			res.status(404);
+			return res.json({message: "Error, no private key"})
+		}
 		const profileInfo = req.app.get('profileInfo');
 		const response = req.app.get('virgilCrypto')
 			.signThenEncrypt(JSON.stringify(profileInfo), keys.privateKey, publicKey).toString('base64')
 		res.json({data: response});
 	}
 
-	async getAccountDetails(req: Request<{id: string}>, res: Response<{data: AccountDetails}>) {
+	async getAccountDetails(req: Request<{id: string}>, res: Response<{data: AccountDetails} | {message: string}>) {
 		const keys = req.app.get('keyPair');
-		const publicKey = req.app.get('clientPublicKey')
+		const publicKey = req.app.get('clientPublicKey');
+		if (!publicKey) {
+			res.status(404);
+			return res.json({message: "Error, no private key"})
+		}
 		const accountDetails = req.app.get('accountDetails');
 		const response = req.app.get('virgilCrypto')
 			.signThenEncrypt(JSON.stringify(accountDetails), keys.privateKey, publicKey).toString('base64')
 		res.json({data: response});
 	}
 
-	async getTransaction(req: Request<{info: string}>, res: Response<{data: {id: string}}>) {
+	async getTransaction(req: Request<{info: string}>, res: Response<{data: {id: string}} | {message: string}>) {
 		const vigrilSecurity = req.app.get('virgilCrypto');
 		const keys = req.app.get('keyPair');
 		const publicKey = req.app.get('clientPublicKey');
+		if (!publicKey) {
+			res.status(404);
+			return res.json({message: "Error, no private key"})
+		}
 		const newTransaction = JSON.parse(vigrilSecurity
 			.decryptThenVerify(NodeBuffer.from(req.body.info, 'base64'), keys.privateKey, [keys.publicKey, publicKey])
 			.toString('utf-8')) as Filter;
@@ -88,10 +100,14 @@ class MainRouterController {
 		return res.json({ data: response } );
 	}
 
-	async chartData(req: Request, res: Response<{info: string}>) {
+	async chartData(req: Request, res: Response<{info: string} | {message: string}>) {
 		const vigrilSecurity = req.app.get('virgilCrypto');
 		const keys = req.app.get('keyPair');
 		const publicKey = req.app.get('clientPublicKey');
+		if (!publicKey) {
+			res.status(404);
+			return res.json({message: "Error, no private key"})
+		}
 		const accountDetails = req.app.get('accountDetails') as AccountDetails;
 		const applicationData = JSON.parse(ApplicationChartMocks);
 		const policesData = JSON.parse(PolicesChartMocks);

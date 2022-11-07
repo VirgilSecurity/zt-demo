@@ -69,7 +69,7 @@ const Transaction = () => {
 		BackendService.getAccountDetails('555-555-555-555').then((value: AccountDetails) => {
 			setTransactions(value.transactions);
 			setIsLoading(false);
-		})
+		}).catch((value) => console.error(value));
 	}
 	return (
 		<LoadingOverlayWrapper

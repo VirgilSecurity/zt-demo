@@ -16,26 +16,48 @@ declare class MainRouterController {
     }, Record<string, any>> | undefined>;
     getProfileDetails(req: Request, res: Response<{
         data: ProfileDetails;
-    }>): Promise<void>;
+    } | {
+        message: string;
+    }>): Promise<Response<{
+        data: ProfileDetails;
+    } | {
+        message: string;
+    }, Record<string, any>> | undefined>;
     getAccountDetails(req: Request<{
         id: string;
     }>, res: Response<{
         data: AccountDetails;
-    }>): Promise<void>;
+    } | {
+        message: string;
+    }>): Promise<Response<{
+        data: AccountDetails;
+    } | {
+        message: string;
+    }, Record<string, any>> | undefined>;
     getTransaction(req: Request<{
         info: string;
     }>, res: Response<{
         data: {
             id: string;
         };
+    } | {
+        message: string;
     }>): Promise<Response<{
         data: {
             id: string;
         };
+    } | {
+        message: string;
     }, Record<string, any>>>;
     chartData(req: Request, res: Response<{
         info: string;
-    }>): Promise<void>;
+    } | {
+        message: string;
+    }>): Promise<Response<{
+        info: string;
+    } | {
+        message: string;
+    }, Record<string, any>> | undefined>;
 }
 declare const _default: MainRouterController;
 export default _default;

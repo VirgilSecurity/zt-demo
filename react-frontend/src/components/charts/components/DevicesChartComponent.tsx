@@ -1,14 +1,17 @@
 import React from 'react';
-import { DevicesWrapper } from '../../styled.components';
+import {
+	DevicesWrapper,
+	Tags
+} from '../../styled.components';
 import { DevicesChart } from "../../../constants/charts.interfaces";
 
 
 const DevicesChartComponent = (props: {data: DevicesChart[]}) => {
 	return (
 		<>
-			{props.data.map((value) => {
+			{props.data.map((value, index) => {
 				return (
-					<DevicesWrapper>
+					<DevicesWrapper key={index}>
 						<div>
 							{value.name}
 						</div>
@@ -16,10 +19,10 @@ const DevicesChartComponent = (props: {data: DevicesChart[]}) => {
 							{value.os}
 						</div>
 						<div>
-							{value.tags.map((value) => (
-								<div>
+							{value.tags.map((value, index) => (
+								<Tags key={index}>
 									{value}
-								</div>
+								</Tags>
 							))}
 						</div>
 					</DevicesWrapper>

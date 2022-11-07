@@ -15,6 +15,10 @@ class MainRouterController {
     async getProfileDetails(req, res) {
         const keys = req.app.get('keyPair');
         const publicKey = req.app.get('clientPublicKey');
+        if (!publicKey) {
+            res.status(404);
+            return res.json({ message: "Error, no private key" });
+        }
         const profileInfo = req.app.get('profileInfo');
         const response = req.app.get('virgilCrypto')
             .signThenEncrypt(JSON.stringify(profileInfo), keys.privateKey, publicKey).toString('base64');
@@ -23,6 +27,10 @@ class MainRouterController {
     async getAccountDetails(req, res) {
         const keys = req.app.get('keyPair');
         const publicKey = req.app.get('clientPublicKey');
+        if (!publicKey) {
+            res.status(404);
+            return res.json({ message: "Error, no private key" });
+        }
         const accountDetails = req.app.get('accountDetails');
         const response = req.app.get('virgilCrypto')
             .signThenEncrypt(JSON.stringify(accountDetails), keys.privateKey, publicKey).toString('base64');
@@ -32,6 +40,10 @@ class MainRouterController {
         const vigrilSecurity = req.app.get('virgilCrypto');
         const keys = req.app.get('keyPair');
         const publicKey = req.app.get('clientPublicKey');
+        if (!publicKey) {
+            res.status(404);
+            return res.json({ message: "Error, no private key" });
+        }
         const newTransaction = JSON.parse(vigrilSecurity
             .decryptThenVerify(NodeBuffer.from(req.body.info, 'base64'), keys.privateKey, [keys.publicKey, publicKey])
             .toString('utf-8'));
@@ -66,6 +78,10 @@ class MainRouterController {
         const vigrilSecurity = req.app.get('virgilCrypto');
         const keys = req.app.get('keyPair');
         const publicKey = req.app.get('clientPublicKey');
+        if (!publicKey) {
+            res.status(404);
+            return res.json({ message: "Error, no private key" });
+        }
         const accountDetails = req.app.get('accountDetails');
         const applicationData = JSON.parse(ApplicationChartMocks);
         const policesData = JSON.parse(PolicesChartMocks);

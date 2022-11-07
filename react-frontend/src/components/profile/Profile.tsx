@@ -23,7 +23,7 @@ const Profile = () => {
 	useEffect(() => {
 		BackendService.getProfileDetails().then((value) => {
 			setProfileInfo(value)
-		});
+		}).catch((value) => console.error(value))
 	}, [])
 	return (
 		<ProfileWrapper>
