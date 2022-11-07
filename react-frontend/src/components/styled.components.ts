@@ -57,9 +57,13 @@ export const MenuButtonLinkHeader = styled(Link)`
     box-shadow: 0 0 12px #4E62C0;
   }
 
-  &:last-child {
+  /* &:last-child {
     margin-left: auto;
-  }
+  } */
+`;
+
+export const LogoLink = styled(Link)`
+  margin-right: auto;
 `
 
 export const MenuButtonHeader = styled.button`
@@ -284,3 +288,13 @@ export const Tags = styled.div`
   border-radius: 25px;
   margin-left: 4px;
 `
+
+export const Logo = styled.div`
+  max-width: 120px;
+  display: flex;
+  margin-right: 24px;
+
+  img {
+    max-width: 100%;
+  }
+`;

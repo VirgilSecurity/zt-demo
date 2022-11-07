@@ -5,7 +5,7 @@ import { HomeWrapper } from "../styled.components";
 const Home = () => {
 	return (
 		<HomeWrapper>
-			<h1>ZT Bank, best cryptography bank</h1>
+			<h1>ZT Bank Demo</h1>
 		</HomeWrapper>
 	);
 };

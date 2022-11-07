@@ -6,10 +6,13 @@ import {
 	DivFlexBox,
 	HeaderWrapper,
 	MenuButtonHeader,
-	MenuButtonLinkHeader
+	LogoLink,
+	MenuButtonLinkHeader,
+	Logo,
 } from '../styled.components';
 import BackendService from "../../services/services";
 import { useNavigate } from "react-router";
+import logo from '../../images/logo.png';
 
 
 const Header = () => {
@@ -28,7 +31,11 @@ const Header = () => {
 		<>
 			<DivFlexBox>
 				<HeaderWrapper>
-					<MenuButtonLinkHeader to='/'>Main Page</MenuButtonLinkHeader>
+					<LogoLink to='/'>
+						<Logo>
+							<img src={logo} alt="" />
+						</Logo>
+					</LogoLink>
 					{isLogged && <MenuButtonLinkHeader to='/transactions'>Transactions</MenuButtonLinkHeader>}
 					{isLogged && <MenuButtonLinkHeader to='/dashboard'>Dashboard</MenuButtonLinkHeader>}
 					{
