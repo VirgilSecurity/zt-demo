@@ -16,6 +16,22 @@ import Dashboard from "./components/charts/Dashboard";
 
 
 function App() {
+	const KYCws = new WebSocket('ws://localhost:3004');
+	KYCws.onopen = () => {
+		console.log('KYC WebSocket opened');
+		KYCws.send('data');
+	};
+	KYCws.onmessage = (message) => {
+		console.log(message.data);
+	};
+	const ExpressWs = new WebSocket('ws://localhost:3002');
+	ExpressWs.onopen = () => {
+		console.log('Express WebSocket opened');
+		KYCws.send('data');
+	};
+	ExpressWs.onmessage = (message) => {
+		console.log(message.data);
+	};
 	return (
 		<BrowserRouter>
 			<Header/>

@@ -1,0 +1,1 @@
+{"version":3,"file":"kyc-controller.js","sourceRoot":"","sources":["../../src/controllers/kyc-controller.ts"],"names":[],"mappings":"AAKA,MAAM,aAAa;IAElB,KAAK,CAAC,IAAI,CAAC,GAAY,EAAE,GAAY;QACpC,GAAG,CAAC,GAAG,CAAC,GAAG,CAAC,IAAI,CAAC,CAAC,IAAI,CAAC,MAAM,CAAC,CAAC;QAC/B,GAAG,CAAC,IAAI,CAAC,MAAM,CAAC,CAAA;IACjB,CAAC;CACD;AAGD,eAAe,IAAI,aAAa,EAAE,CAAC"}

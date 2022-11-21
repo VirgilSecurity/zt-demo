@@ -17,6 +17,8 @@ import { AccountDetailsMocks } from "./mocks/accountDetailsMocks.js";
 import { AccountDetails } from "./interfaces/account.interface.js";
 import { ProfileDetailsMocks } from "./mocks/profileDetailsMocks.js";
 import { ProfileDetails } from "./interfaces/profile.interface.js";
+import * as http from "http";
+import { WebSocketServer } from "ws";
 
 
 dotenv.config();
@@ -49,7 +51,21 @@ const app: Express = express();
 		res.send('Application is running');
 	});
 
-	app.listen('3002',() => {
+	const server = http.createServer(app);
+	const wss = new WebSocketServer({server})
+	wss.on("open", (ws, request, client) => {
+		console.log(client);
+		console.log(request);
+		client.send('connected!');
+	});
+	wss.on("connection",(ws) => {
+		app.set('ws', ws);
+		ws.on('message', (data) => {
+			console.log(data);
+		})
+		ws.send('data');
+	})
+	server.listen(3002, () => {
 		console.log('server is running');
 	});
 })();
