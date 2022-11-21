@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import MainRouterController from '../controllers/main-router-controller.js';
-import KycController from "../controllers/kyc-controller.js";
+import KycController from '../controllers/kyc-controller.js';
 const mainRouter = Router();
 mainRouter.post('/login', MainRouterController.getNewPublicKey);
 mainRouter.post('/get-profile-details', MainRouterController.getProfileDetails);

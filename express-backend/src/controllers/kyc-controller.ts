@@ -1,7 +1,7 @@
 import {
 	Request,
 	Response
-} from "express";
+} from 'express';
 import fetch from 'node-fetch';
 
 
@@ -13,9 +13,9 @@ class KycController {
 			method: 'POST',
 		}).then((value) => {
 			value.json().then((test) => {
-				console.log(test)
-			})
-		})
+				console.log(test);
+			});
+		});
 	}
 
 }

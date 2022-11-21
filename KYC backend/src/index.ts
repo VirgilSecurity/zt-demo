@@ -4,17 +4,17 @@ import express, {
 	Express,
 	Request,
 	Response
-} from "express";
+} from 'express';
 import {
 	initCrypto,
 	KeyPairType,
 	VirgilCrypto,
 	VirgilKeyPair
-} from "virgil-crypto";
-import morganMiddleware from "./logger/morganMiddleware.js";
-import router from "./routes/routes.js";
-import * as http from "http";
-import { WebSocketServer } from "ws";
+} from 'virgil-crypto';
+import morganMiddleware from './logger/morganMiddleware.js';
+import router from './routes/routes.js';
+import * as http from 'http';
+import { WebSocketServer } from 'ws';
 
 
 dotenv.config();
@@ -22,7 +22,7 @@ dotenv.config();
 const app: Express = express();
 
 (async () => {
-	await initCrypto()
+	await initCrypto();
 
 	const virgilCrypto = new VirgilCrypto({
 		defaultKeyPairType: KeyPairType.ED25519
@@ -34,31 +34,30 @@ const app: Express = express();
 
 	app.use(cors());
 	app.use(express.json());
-	app.use(morganMiddleware)
+	app.use(morganMiddleware);
 	app.use(router);
 
 	app.get('/', (req: Request, res: Response) => {
 		res.send('runned');
-	})
+	});
 
 	const server = http.createServer(app);
 	const wss = new WebSocketServer({server});
-	wss.on("open", (ws, request, client) => {
+	wss.on('open', (ws, request, client) => {
 		console.log(client);
 		console.log(request);
 		client.send('connected!');
 	});
-	wss.on("connection",(ws) => {
+	wss.on('connection', (ws) => {
 		app.set('ws', ws);
 		ws.on('message', (data) => {
 			console.log(data);
-		})
+		});
 		ws.send('data');
-	})
+	});
 	server.listen(3004, () => {
 		console.log('server is running');
 	});
-})()
-
+})();
 
 

@@ -1,8 +1,8 @@
-import { Currency } from "./profile.interface";
+import { Currency } from './profile.interface';
 export interface AccountDetails {
     transactions: Transactions[];
 }
-export declare type TransactionType = 'DEBIT' | 'CREDIT';
+export type TransactionType = 'DEBIT' | 'CREDIT';
 export interface Transactions {
     createdDate: string;
     amount: string;

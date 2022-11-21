@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 declare class KycController {
     getKycStatus(req: Request, res: Response): Promise<void>;
 }

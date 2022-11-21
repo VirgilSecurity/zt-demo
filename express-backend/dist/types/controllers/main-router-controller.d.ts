@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ProfileDetails } from '../interfaces/profile.interface.js';
 import { AccountDetails } from '../interfaces/account.interface.js';
-import { VirgilPrivateKey } from "virgil-crypto/dist/types/VirgilPrivateKey";
+import { VirgilPrivateKey } from 'virgil-crypto/dist/types/VirgilPrivateKey';
 declare class MainRouterController {
     getNewPublicKey(req: Request<{
         key: VirgilPrivateKey;
