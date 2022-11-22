@@ -41,12 +41,12 @@ const Header = () => {
 					{isLogged && <MenuButtonLinkHeader to='/transactions'>Transactions</MenuButtonLinkHeader>}
 					{isLogged && <MenuButtonLinkHeader to='/dashboard'>Dashboard</MenuButtonLinkHeader>}
 					{
-						// !isLogged ? <MenuButtonHeader onClick={login}>Login</MenuButtonHeader> :
-						!isLogged ? <MenuButtonHeader onClick={() => setIsOpen(true)}>Login</MenuButtonHeader> :
+						!isLogged ? <MenuButtonHeader onClick={login}>Login</MenuButtonHeader> :
+						// !isLogged ? <MenuButtonHeader onClick={() => setIsOpen(true)}>Login</MenuButtonHeader> :
 						<MenuButtonLinkHeader to='/profile'>Profile</MenuButtonLinkHeader>
 					}
 				</HeaderWrapper>
-				{isOpen && <Modal setIsOpen={setIsOpen} />}
+				{/* {isOpen && <Modal setIsOpen={setIsOpen} />} */}
 			</DivFlexBox>
 		</>
 	);
