@@ -56,10 +56,6 @@ export const MenuButtonLinkHeader = styled(Link)`
   &:hover {
     box-shadow: 0 0 12px #4E62C0;
   }
-
-  /* &:last-child {
-    margin-left: auto;
-  } */
 `;
 
 export const LogoLink = styled(Link)`
@@ -298,3 +294,87 @@ export const Logo = styled.div`
     max-width: 100%;
   }
 `;
+
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+`;
+
+export const AuthBody = styled.div`
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  z-index: 1100;
+  width: 100%;
+  max-width: 370px;
+  border-radius: 25px;
+  padding: 20px 25px;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.5);
+`;
+
+export const Modal = styled.div``;
+
+export const ModalHeader = styled.div`
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 24px;
+`;
+
+export const CloseModal = styled.div``;
+
+export const ModalForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  input,
+  select {
+    border-radius: 40px;
+    height: 40px;
+    padding: 0 16px;
+    height: 40px;
+    border: 1px solid #4E62C0;
+    outline: 0;
+    transition: .2s ease-out;
+
+    &:focus {
+      box-shadow: 0 0 12px #4e62c0;
+    }    
+  }
+
+  & > label {
+    border-color: #4E62C0;
+    height: 40px;
+
+    svg {
+      margin-right: 8px;
+    }
+  }
+`;
+
+export const AuthButton = styled.button`
+  padding: 8px 16px;
+  text-decoration: none;
+  background: #4E62C0;
+  border-radius: 150px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: medium;
+  cursor: pointer;
+  transition: .2s ease-out;
+  min-width: 180px;
+
+  &:hover {
+    box-shadow: 0 0 12px #4E62C0;
+  }
+`
+
+
+
