@@ -1,0 +1,1 @@
+{"version":3,"file":"statusMock.js","sourceRoot":"","sources":["../../src/mocks/statusMock.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,MAAM,eAAe,GAAoB;IAC/C,MAAM,EAAE,cAAc;IACtB,WAAW,EAAE,IAAI;CACjB,CAAC;AAEF,MAAM,CAAC,MAAM,mBAAmB,GAAoB;IACnD,MAAM,EAAE,aAAa;IACrB,WAAW,EAAE,KAAK;CAClB,CAAC;AAEF,MAAM,CAAC,MAAM,cAAc,GAAoB;IAC9C,MAAM,EAAE,UAAU;IAClB,WAAW,EAAE,KAAK;CAClB,CAAC"}

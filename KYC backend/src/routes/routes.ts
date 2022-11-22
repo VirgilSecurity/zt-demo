@@ -6,6 +6,6 @@ const router = Router();
 
 router.post('/login', KycController.login);
 router.post('/get-kyc-status', KycController.getKycStatus);
-
+router.post('/kyc', KycController.register);
 
 export default router;

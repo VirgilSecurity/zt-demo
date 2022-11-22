@@ -1,6 +1,6 @@
 import { NodeBuffer } from '@virgilsecurity/data-utils';
 import { ApplicationChartMocks, DevicesChartMocks, PolicesChartMocks, UsersChartMocks } from '../mocks/charMocks.js';
-import { Axios } from "axios";
+import { Axios } from 'axios';
 class MainRouterController {
     async getNewPublicKey(req, res) {
         if (!req.body.key) {
@@ -24,7 +24,8 @@ class MainRouterController {
         const response = req.app.get('virgilCrypto').exportPublicKey(keys.publicKey).toString('base64');
         axios.post('http://localhost:3004/login', { key: response }).then((value) => {
             const converted = JSON.parse(value.data);
-            req.app.set('kycPublicKey', converted.key);
+            const anotherKey = req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
+            req.app.set('kycPublicKey', anotherKey);
         });
         res.json({ key: response });
     }

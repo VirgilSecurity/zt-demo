@@ -1,7 +1,9 @@
 import { Axios } from "axios";
 import {
 	AccountDetails,
-	ProfileDetails
+	ProfileDetails,
+	RegisterInterface,
+	StatusInterface
 } from "../constants/profile.interface";
 import { Filter } from "../constants/filters.inteface";
 import {
@@ -37,7 +39,6 @@ class BackedService {
 	})
 
 	constructor() {
-		console.log(this._url);
 		this.createCryptoInstance()
 			.then(() => console.log('Successfully Initialize Crypto Module'));
 	}
@@ -147,6 +148,40 @@ class BackedService {
 					.toString('utf-8');
 			console.log('POST /charts response data after decrypt ->', decryptedBuffer.toString());
 			return JSON.parse(decryptedBuffer) as unknown as ChartResponse;
+		})
+	}
+
+	public async getKycStatus(): Promise<StatusInterface> {
+		return await this.axios.post<any>('get-kyc-status').then((value) => {
+			const converted = JSON.parse(value.data);
+			if (!converted.data) {
+				throw new Error('Login error, login again pls');
+			}
+			console.log('POST /get-kyc-status response data before decrypt ->', converted.data);
+			const decryptedBuffer =
+				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
+					.toString('utf-8');
+			console.log('POST /get-kyc-status response data after decrypt ->', decryptedBuffer.toString());
+			return JSON.parse(decryptedBuffer) as unknown as StatusInterface;
+		})
+	}
+
+	public async registerInKyc(registerData: RegisterInterface): Promise<any> {
+		console.clear();
+		console.log('POST /registerInKyc request data before encrypt', registerData);
+		console.log(JSON.stringify(registerData));
+		const encryptedData = this.virgilCrypto.signThenEncrypt(JSON.stringify(registerData), this.keyPair.privateKey, this.serverPublicKey).toString('base64')
+		return this.axios.post('/kyc', {info: encryptedData}).then((value) => {
+			const converted = JSON.parse(value.data);
+			if (!converted.status) {
+				throw new Error('Login error, login again pls');
+			}
+			console.log('POST /kyc response data before decrypt ->', converted.status);
+			const decryptedBuffer =
+				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.status, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
+					.toString('utf-8');
+			console.log('POST /kyc response data after decrypt ->', decryptedBuffer.toString());
+			return JSON.parse(decryptedBuffer) as unknown as StatusInterface;
 		})
 	}
 }

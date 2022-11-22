@@ -9,6 +9,7 @@ declare class KycController {
         message: string;
     }>): Promise<void>;
     getKycStatus(req: Request, res: Response): Promise<void>;
+    register(req: Request, res: Response): Promise<void>;
 }
 declare const _default: KycController;
 export default _default;

@@ -11,3 +11,9 @@ export interface Accounts {
 	balance: string;
 	currency: Currency;
 }
+
+export interface RegisterInterface {
+	name: string;
+	secondName: string;
+	email: string;
+}

@@ -8,5 +8,6 @@ mainRouter.post('/get-account-details', MainRouterController.getAccountDetails);
 mainRouter.post('/transaction', MainRouterController.getTransaction);
 mainRouter.post('/charts', MainRouterController.chartData);
 mainRouter.post('/get-kyc-status', KycController.getKycStatus);
+mainRouter.post('/kyc', KycController.register);
 export default mainRouter;
 //# sourceMappingURL=main-router.js.map

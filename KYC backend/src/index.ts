@@ -30,7 +30,7 @@ const app: Express = express();
 	const keyPair: VirgilKeyPair = virgilCrypto.generateKeys(KeyPairType.ED25519);
 	app.set('keyPair', keyPair);
 	app.set('virgilCrypto', virgilCrypto);
-	app.set('status', {status: 'not_verified', need_verify: true});
+	app.set('isLogged', false);
 
 	app.use(cors());
 	app.use(express.json());
@@ -44,16 +44,10 @@ const app: Express = express();
 	const server = http.createServer(app);
 	const wss = new WebSocketServer({server});
 	wss.on('open', (ws, request, client) => {
-		console.log(client);
-		console.log(request);
 		client.send('connected!');
 	});
 	wss.on('connection', (ws) => {
 		app.set('ws', ws);
-		ws.on('message', (data) => {
-			console.log(data);
-		});
-		ws.send('data');
 	});
 	server.listen(3004, () => {
 		console.log('server is running');

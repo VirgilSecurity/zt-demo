@@ -15,16 +15,28 @@ import {
 	Title
 } from './styled';
 import avatar from '../../images/avatar.svg';
-import { DivFlexJustify } from '../styled.components';
+import { DivFlexJustify, MenuButtonHeader } from '../styled.components';
 
 
 const Profile = () => {
 	const [profileInfo, setProfileInfo] = useState<ProfileDetails>();
 	useEffect(() => {
 		BackendService.getProfileDetails().then((value) => {
-			setProfileInfo(value)
+			setProfileInfo(value);
+			BackendService.getKycStatus().then((value) => {
+				console.log(value);
+			});
 		}).catch((value) => console.error(value))
-	}, [])
+	}, []);
+	const handleClick = () => {
+		BackendService.registerInKyc({
+			name: 'Test',
+			secondName: 'Tester',
+			email: 'dsakl@dkls',
+		}).then((value) => {
+			console.log(value);
+		})
+	}
 	return (
 		<ProfileWrapper>
 			<Title>Profile Page</Title>
@@ -32,6 +44,7 @@ const Profile = () => {
 				<ProfileAvatar>
 					<img src={avatar} alt=""/>
 				</ProfileAvatar>
+				<MenuButtonHeader onClick={handleClick}> test</MenuButtonHeader>
 				<ProfileName>{profileInfo?.name}</ProfileName>
 			</ProfileInfo>
 			<ProfileList>
