@@ -26,8 +26,9 @@ class KycController {
 	async getKycStatus(req: Request, res:Response) {
 		const keys = req.app.get('keyPair');
 		const publicKey = req.app.get('clientPublicKey');
-		req.app.get('ws').send('Started KYC status' + req.app.get('isLogged') ? VerifiedStatus : req.app.get('isTimeout') ? PendingVerifyStatus : NotVerifyStatus);
-		const response = req.app.get('virgilCrypto').signThenEncrypt(JSON.stringify(req.app.get('isLogged') ? VerifiedStatus : req.app.get('isTimeout') ? PendingVerifyStatus : NotVerifyStatus), keys.privateKey, publicKey).toString('base64');
+		const sendStatus = req.app.get('isLogged') ? VerifiedStatus : req.app.get('isTimeout') ? PendingVerifyStatus : NotVerifyStatus;
+		req.app.get('ws').send('Started KYC status' + sendStatus);
+		const response = req.app.get('virgilCrypto').signThenEncrypt(JSON.stringify(sendStatus), keys.privateKey, publicKey).toString('base64');
 		req.app.get('ws').send('Send encrypted KYC Status to antoher backend ' + response);
 		res.json({status : response});
 	}

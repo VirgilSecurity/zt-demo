@@ -11,23 +11,25 @@ class KycController {
     async getKycStatus(req, res) {
         const keys = req.app.get('keyPair');
         const publicKey = req.app.get('clientPublicKey');
-        const response = req.app.get('virgilCrypto').signThenEncrypt(JSON.stringify(req.app.get('isLogged') ? VerifiedStatus : req.app.get('isTimeout') ? PendingVerifyStatus : NotVerifyStatus), keys.privateKey, publicKey).toString('base64');
-        req.app.get('ws').send('Send encrypted KYC Status to antoher backend' + response);
+        const temp = req.app.get('isLogged') ? VerifiedStatus : req.app.get('isTimeout') ? PendingVerifyStatus : NotVerifyStatus;
+        req.app.get('ws').send('Started KYC status' + temp);
+        const response = req.app.get('virgilCrypto').signThenEncrypt(JSON.stringify(temp), keys.privateKey, publicKey).toString('base64');
+        req.app.get('ws').send('Send encrypted KYC Status to antoher backend ' + response);
         res.json({ status: response });
     }
     async register(req, res) {
         const keys = req.app.get('keyPair');
         const publicKey = req.app.get('clientPublicKey');
         const converted = req.app.get('virgilCrypto').decryptThenVerify(NodeBuffer.from(req.body.info, 'base64'), keys.privateKey, [keys.publicKey, publicKey]).toString('utf-8');
-        req.app.get('ws').send('decrypted status info on KYC backend' + converted);
+        req.app.get('ws').send('decrypted status info on KYC backend ' + converted);
         req.app.set('isTimeout', true);
         setTimeout(() => {
             req.app.set('isLogged', true);
             req.app.set('isTimeout', false);
         }, 10000);
-        req.app.get('ws').send('Before encryption KYC status' + JSON.stringify(PendingVerifyStatus));
+        req.app.get('ws').send('Before encryption KYC status ' + JSON.stringify(PendingVerifyStatus));
         const response = req.app.get('virgilCrypto').signThenEncrypt(JSON.stringify(PendingVerifyStatus), keys.privateKey, publicKey).toString('base64');
-        req.app.get('ws').send('Send encrypted new KYC status' + response);
+        req.app.get('ws').send('Send encrypted new KYC status ' + response);
         res.json({ data: response });
     }
 }

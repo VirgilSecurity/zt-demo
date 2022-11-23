@@ -33,7 +33,7 @@ const app = express();
     wss.on('connection', (ws) => {
         app.set('ws', ws);
     });
-    server.listen(3004, () => {
+    server.listen(3004, 'localhost', () => {
         console.log('server is running');
     });
 })();

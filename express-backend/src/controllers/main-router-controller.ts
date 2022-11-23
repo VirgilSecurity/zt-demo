@@ -3,7 +3,6 @@ import {
 	Response
 } from 'express';
 import {
-	Accounts,
 	ProfileDetails
 } from '../interfaces/profile.interface.js';
 import {
@@ -21,7 +20,6 @@ import {
 import { TransactionsChart } from '../interfaces/chart.interface';
 import { Axios } from 'axios';
 
-
 class MainRouterController {
 
 	async getNewPublicKey(req: Request<{key: VirgilPrivateKey}>, res: Response<{key: VirgilPrivateKey} | {message: string}>) {
@@ -37,7 +35,7 @@ class MainRouterController {
 			},
 			responseType: 'json',
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
 			}
 		});
 		const key =  req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(req.body.key, 'base64'));
@@ -46,7 +44,7 @@ class MainRouterController {
 		const response = req.app.get('virgilCrypto').exportPublicKey(keys.publicKey).toString('base64');
 		axios.post('http://localhost:3004/login', {key: response}).then((value) => {
 			const converted = JSON.parse(value.data);
-			const anotherKey = req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(converted.key + '', 'base64'))
+			const anotherKey = req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
 			req.app.set('kycPublicKey', anotherKey);
 		});
 		res.json({key: response});
