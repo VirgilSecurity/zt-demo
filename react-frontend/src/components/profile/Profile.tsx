@@ -12,10 +12,13 @@ import {
 	ProfileListItem,
 	ProfileName,
 	ProfileWrapper,
-	Title
-} from './styled';
+	Title,
+	ProfileVerified,
+	DivFlexJustify,
+	ProfileUnverified
+} from '../styled.components';
 import avatar from '../../images/avatar.svg';
-import { DivFlexJustify, MenuButtonHeader } from '../styled.components';
+import { DivFlexJustify } from '../styled.components';
 
 
 const Profile = () => {
@@ -42,9 +45,10 @@ const Profile = () => {
 			<Title>Profile Page</Title>
 			<ProfileInfo>
 				<ProfileAvatar>
+					<ProfileVerified>Verified</ProfileVerified>
+					<ProfileUnverified>Unverified</ProfileUnverified>
 					<img src={avatar} alt=""/>
 				</ProfileAvatar>
-				<MenuButtonHeader onClick={handleClick}> test</MenuButtonHeader>
 				<ProfileName>{profileInfo?.name}</ProfileName>
 			</ProfileInfo>
 			<ProfileList>

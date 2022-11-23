@@ -12,9 +12,7 @@ import {
 import {
 	ProfileCell,
 	ProfileList,
-	ProfileListItem
-} from "../profile/styled";
-import {
+	ProfileListItem,
 	DivFlexBox,
 	DivFlexBoxColumn,
 	DivFlexJustify,
