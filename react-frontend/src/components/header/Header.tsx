@@ -13,7 +13,6 @@ import {
 import BackendService from "../../services/services";
 import { useNavigate } from "react-router";
 import logo from '../../images/logo.png';
-import Modal from "../auth/auth";
 
 
 const Header = () => {
@@ -28,7 +27,6 @@ const Header = () => {
 	useEffect(() => {
 		!isLogged && navigate('/')
 	}, [])
-	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<>
 			<DivFlexBox>
@@ -42,11 +40,9 @@ const Header = () => {
 					{isLogged && <MenuButtonLinkHeader to='/dashboard'>Dashboard</MenuButtonLinkHeader>}
 					{
 						!isLogged ? <MenuButtonHeader onClick={login}>Login</MenuButtonHeader> :
-						// !isLogged ? <MenuButtonHeader onClick={() => setIsOpen(true)}>Login</MenuButtonHeader> :
 						<MenuButtonLinkHeader to='/profile'>Profile</MenuButtonLinkHeader>
 					}
 				</HeaderWrapper>
-				{/* {isOpen && <Modal setIsOpen={setIsOpen} />} */}
 			</DivFlexBox>
 		</>
 	);

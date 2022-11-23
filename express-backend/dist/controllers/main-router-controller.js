@@ -1,15 +1,32 @@
-import { NodeBuffer } from "@virgilsecurity/data-utils";
-import { ApplicationChartMocks, DevicesChartMocks, PolicesChartMocks, UsersChartMocks } from "../mocks/charMocks.js";
+import { NodeBuffer } from '@virgilsecurity/data-utils';
+import { ApplicationChartMocks, DevicesChartMocks, PolicesChartMocks, UsersChartMocks } from '../mocks/charMocks.js';
+import { Axios } from 'axios';
 class MainRouterController {
     async getNewPublicKey(req, res) {
         if (!req.body.key) {
             res.status(404);
-            return res.json({ message: "Error, no private key" });
+            return res.json({ message: 'Error, no private key' });
         }
+        const axios = new Axios({
+            //transformResponse: res => JSON.parse(res as unknown as string),
+            transformRequest: req => JSON.stringify(req),
+            transitional: {
+                silentJSONParsing: false
+            },
+            responseType: 'json',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         const key = req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(req.body.key, 'base64'));
         req.app.set('clientPublicKey', key);
         const keys = req.app.get('keyPair');
         const response = req.app.get('virgilCrypto').exportPublicKey(keys.publicKey).toString('base64');
+        axios.post('http://0.0.0.0:3004/login', { key: response }).then((value) => {
+            const converted = JSON.parse(value.data);
+            const anotherKey = req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
+            req.app.set('kycPublicKey', anotherKey);
+        });
         res.json({ key: response });
     }
     async getProfileDetails(req, res) {
@@ -17,7 +34,7 @@ class MainRouterController {
         const publicKey = req.app.get('clientPublicKey');
         if (!publicKey) {
             res.status(404);
-            return res.json({ message: "Error, no private key" });
+            return res.json({ message: 'Error, no private key' });
         }
         const profileInfo = req.app.get('profileInfo');
         const response = req.app.get('virgilCrypto')
@@ -29,7 +46,7 @@ class MainRouterController {
         const publicKey = req.app.get('clientPublicKey');
         if (!publicKey) {
             res.status(404);
-            return res.json({ message: "Error, no private key" });
+            return res.json({ message: 'Error, no private key' });
         }
         const accountDetails = req.app.get('accountDetails');
         const response = req.app.get('virgilCrypto')
@@ -42,12 +59,12 @@ class MainRouterController {
         const publicKey = req.app.get('clientPublicKey');
         if (!publicKey) {
             res.status(404);
-            return res.json({ message: "Error, no private key" });
+            return res.json({ message: 'Error, no private key' });
         }
         const newTransaction = JSON.parse(vigrilSecurity
             .decryptThenVerify(NodeBuffer.from(req.body.info, 'base64'), keys.privateKey, [keys.publicKey, publicKey])
             .toString('utf-8'));
-        let profileInfo = req.app.get('profileInfo');
+        const profileInfo = req.app.get('profileInfo');
         let flag = true;
         const accountDetails = req.app.get('accountDetails');
         profileInfo.accounts.forEach((value) => {
@@ -80,7 +97,7 @@ class MainRouterController {
         const publicKey = req.app.get('clientPublicKey');
         if (!publicKey) {
             res.status(404);
-            return res.json({ message: "Error, no private key" });
+            return res.json({ message: 'Error, no private key' });
         }
         const accountDetails = req.app.get('accountDetails');
         const applicationData = JSON.parse(ApplicationChartMocks);
@@ -91,11 +108,11 @@ class MainRouterController {
         const transactionsData = [];
         accountDetails.transactions.forEach((value) => {
             if (dateArray.includes(value.createdDate)) {
-                transactionsData.find((transaction) => transaction.createdDate === value.createdDate.split(" ")[0]).count++;
+                transactionsData.find((transaction) => transaction.createdDate === value.createdDate.split(' ')[0]).count++;
             }
             else {
                 transactionsData.push({
-                    createdDate: value.createdDate.split(" ")[0],
+                    createdDate: value.createdDate.split(' ')[0],
                     count: 1,
                 });
                 dateArray.push(value.createdDate);

@@ -4,9 +4,9 @@ export interface ApplicationChart {
     assignedRules: number;
     status: AppStatus;
 }
-export declare type Action = 'Allow' | 'Block';
-export declare type Os = 'Mac' | 'Windows' | 'Linux';
-export declare type AppStatus = 'Green' | 'Yellow' | 'Red';
+export type Action = 'Allow' | 'Block';
+export type Os = 'Mac' | 'Windows' | 'Linux';
+export type AppStatus = 'Green' | 'Yellow' | 'Red';
 export interface PolicesChart {
     name: string;
     editDate: string;

@@ -1,5 +1,14 @@
 version : "1"
 services:
+  kyc-backend:
+    build: ./KYC backend
+    container_name: kyc-backend
+    environment:
+      - PORT=3004
+      - NODE_OPTIONS="--experimental-specifier-resolution=node"
+    ports:
+      - 3004:3004
+
   express-backend:
     build: ./express-backend
     container_name: backend

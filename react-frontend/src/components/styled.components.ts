@@ -319,7 +319,7 @@ export const AuthBody = styled.div`
   box-shadow: 0 0 24px rgba(255, 255, 255, 0.5);
 `;
 
-export const Modal = styled.div``;
+export const ModalDiv = styled.div``;
 
 export const ModalHeader = styled.div`
   font-size: 24px;
@@ -448,7 +448,7 @@ export const ProfileCell = styled.div`
   justify-content: center;
 `;
 
-export const ProfileUnverified = styled.div`
+export const ProfileUnverified = styled.button`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -458,6 +458,10 @@ export const ProfileUnverified = styled.div`
   color: #ffffff;
   padding: 4px 8px;
   font-weight: 600;
+  cursor: pointer;
+  :disabled {
+    cursor: default;
+  }
 `;
 
 

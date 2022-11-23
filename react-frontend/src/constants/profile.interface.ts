@@ -25,4 +25,19 @@ export interface Transactions {
 	type:TransactionType,
 }
 
+export interface StatusInterface {
+	status: Status,
+	need_verify: boolean;
+}
+
+export type Status = 'not_verified' | 'verified' | 'KYC pending';
+
+
+export interface RegisterInterface {
+	name: string;
+	secondName: string;
+	email: string;
+	file: any;
+}
+
 // export interface buttonBg: boolean

@@ -3,9 +3,11 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morganMiddleware from './logger/morganMiddleware.js';
 import routes from './routes/routes.js';
-import { initCrypto, KeyPairType, VirgilCrypto } from "virgil-crypto";
-import { AccountDetailsMocks } from "./mocks/accountDetailsMocks.js";
-import { ProfileDetailsMocks } from "./mocks/profileDetailsMocks.js";
+import { initCrypto, KeyPairType, VirgilCrypto } from 'virgil-crypto';
+import { AccountDetailsMocks } from './mocks/accountDetailsMocks.js';
+import { ProfileDetailsMocks } from './mocks/profileDetailsMocks.js';
+import * as http from 'http';
+import { WebSocketServer } from 'ws';
 dotenv.config();
 const app = express();
 (async () => {
@@ -27,7 +29,15 @@ const app = express();
     app.get('/', (req, res) => {
         res.send('Application is running');
     });
-    app.listen('3002', () => {
+    const server = http.createServer(app);
+    const wss = new WebSocketServer({ server });
+    wss.on('open', (ws, request, client) => {
+        client.send('connected!');
+    });
+    wss.on('connection', (ws) => {
+        app.set('ws', ws);
+    });
+    server.listen(3002, () => {
         console.log('server is running');
     });
 })();

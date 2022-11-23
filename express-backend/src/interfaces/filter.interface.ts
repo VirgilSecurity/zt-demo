@@ -1,4 +1,4 @@
-import { Currency } from "./profile.interface";
+import { Currency } from './profile.interface';
 
 
 export interface Filter {

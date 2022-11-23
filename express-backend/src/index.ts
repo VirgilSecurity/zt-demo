@@ -12,11 +12,13 @@ import {
 	KeyPairType,
 	VirgilCrypto,
 	VirgilKeyPair
-} from "virgil-crypto";
-import { AccountDetailsMocks } from "./mocks/accountDetailsMocks.js";
-import { AccountDetails } from "./interfaces/account.interface.js";
-import { ProfileDetailsMocks } from "./mocks/profileDetailsMocks.js";
-import { ProfileDetails } from "./interfaces/profile.interface.js";
+} from 'virgil-crypto';
+import { AccountDetailsMocks } from './mocks/accountDetailsMocks.js';
+import { AccountDetails } from './interfaces/account.interface.js';
+import { ProfileDetailsMocks } from './mocks/profileDetailsMocks.js';
+import { ProfileDetails } from './interfaces/profile.interface.js';
+import * as http from 'http';
+import { WebSocketServer } from 'ws';
 
 
 dotenv.config();
@@ -27,7 +29,7 @@ const app: Express = express();
 	// create express app
 
 	await initCrypto();
-	const virgilCrypto = new VirgilCrypto({ defaultKeyPairType: KeyPairType.ED25519})
+	const virgilCrypto = new VirgilCrypto({defaultKeyPairType: KeyPairType.ED25519});
 	const keyPair: VirgilKeyPair = virgilCrypto.generateKeys(KeyPairType.ED25519);
 
 	//set global app variables
@@ -38,7 +40,7 @@ const app: Express = express();
 
 
 	// use custom middlewares for logs and json convert
-	app.use(cors())
+	app.use(cors());
 	app.use(express.json());
 	app.use(morganMiddleware);
 
@@ -49,7 +51,15 @@ const app: Express = express();
 		res.send('Application is running');
 	});
 
-	app.listen('3002',() => {
+	const server = http.createServer(app);
+	const wss = new WebSocketServer({server});
+	wss.on('open', (ws, request, client) => {
+		client.send('connected!');
+	});
+	wss.on('connection', (ws) => {
+		app.set('ws', ws);
+	});
+	server.listen(3002, () => {
 		console.log('server is running');
 	});
 })();
