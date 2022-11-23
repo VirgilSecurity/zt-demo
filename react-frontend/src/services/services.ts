@@ -3,6 +3,7 @@ import {
 	AccountDetails,
 	ProfileDetails,
 	RegisterInterface,
+	Status,
 	StatusInterface
 } from "../constants/profile.interface";
 import { Filter } from "../constants/filters.inteface";
@@ -152,7 +153,7 @@ class BackedService {
 	}
 
 	public async getKycStatus(): Promise<StatusInterface> {
-		return await this.axios.post<any>('get-kyc-status').then((value) => {
+		return await this.axios.post('get-kyc-status').then((value) => {
 			const converted = JSON.parse(value.data);
 			if (!converted.data) {
 				throw new Error('Login error, login again pls');
@@ -161,15 +162,14 @@ class BackedService {
 			const decryptedBuffer =
 				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
 					.toString('utf-8');
-			console.log('POST /get-kyc-status response data after decrypt ->', decryptedBuffer.toString());
+			console.log('POST /get-kyc-status response data after decrypt ->', decryptedBuffer);
 			return JSON.parse(decryptedBuffer) as unknown as StatusInterface;
 		})
 	}
 
-	public async registerInKyc(registerData: RegisterInterface): Promise<any> {
+	public async registerInKyc(registerData: RegisterInterface): Promise<StatusInterface> {
 		console.clear();
 		console.log('POST /registerInKyc request data before encrypt', registerData);
-		console.log(JSON.stringify(registerData));
 		const encryptedData = this.virgilCrypto.signThenEncrypt(JSON.stringify(registerData), this.keyPair.privateKey, this.serverPublicKey).toString('base64')
 		return this.axios.post('/kyc', {info: encryptedData}).then((value) => {
 			const converted = JSON.parse(value.data);

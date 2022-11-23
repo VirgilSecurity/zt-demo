@@ -37,6 +37,7 @@ export interface RegisterInterface {
 	name: string;
 	secondName: string;
 	email: string;
+	file: any;
 }
 
 // export interface buttonBg: boolean

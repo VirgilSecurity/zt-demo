@@ -17,6 +17,7 @@ const app = express();
     app.set('keyPair', keyPair);
     app.set('virgilCrypto', virgilCrypto);
     app.set('isLogged', false);
+    app.set('isTimeout', false);
     app.use(cors());
     app.use(express.json());
     app.use(morganMiddleware);
