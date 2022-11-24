@@ -42,12 +42,12 @@ class MainRouterController {
 		req.app.set('clientPublicKey', key);
 		const keys = req.app.get('keyPair');
 		const response = req.app.get('virgilCrypto').exportPublicKey(keys.publicKey).toString('base64');
-		axios.post('http://localhost:3004/login', {key: response}).then((value) => {
+		axios.post('http://host.docker.internal:3004/login', {key: response}).then((value) => {
 			const converted = JSON.parse(value.data);
 			const anotherKey = req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
 			req.app.set('kycPublicKey', anotherKey);
+			res.json({key: response});
 		});
-		res.json({key: response});
 	}
 
 	async getProfileDetails(req: Request, res: Response<{data: ProfileDetails} | {message: string}>) {
