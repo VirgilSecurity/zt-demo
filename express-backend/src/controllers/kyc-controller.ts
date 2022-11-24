@@ -25,7 +25,7 @@ class KycController {
 		const keys = req.app.get('keyPair');
 		const publicKey = req.app.get('kycPublicKey');
 		const clientKey = req.app.get('clientPublicKey');
-		axios.post('http://localhost:3004/get-kyc-status').then((value) => {
+		axios.post('http://host.docker.internal:3004/get-kyc-status').then((value) => {
 			req.app.get('ws').send('Encrypted KYC response ' +  value.data.toString());
 			const converted = JSON.parse(value.data);
 			const decrypted = req.app.get('virgilCrypto').decryptThenVerify(NodeBuffer.from(converted.status, 'base64'), keys.privateKey, [keys.publicKey, publicKey]).toString('utf-8');
@@ -45,7 +45,7 @@ class KycController {
 		req.app.get('ws').send('Decrypted register info ' + decrypted);
 		const encrypted = req.app.get('virgilCrypto').signThenEncrypt(decrypted, keys.privateKey, publicKey).toString('base64');
 		req.app.get('ws').send('encrypted register info ' + encrypted);
-		axios.post('http://localhost:3004/kyc', {info : encrypted}).then((value) => {
+		axios.post('http://host.docker.internal:3004/kyc', {info : encrypted}).then((value) => {
 			req.app.get('ws').send('Encrypted KYC response ' + value.data);
 			const converted = JSON.parse(value.data);
 			const decrypted = req.app.get('virgilCrypto').decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), keys.privateKey, [keys.publicKey, publicKey]).toString('utf-8');
