@@ -5,46 +5,75 @@ import React, {
 import BackendService from '../../services/services';
 import {
 	ProfileDetails,
-	RegisterInterface,
-	Status,
-	StatusInterface
+	Status
 } from "../../constants/profile.interface";
 import {
+	DivFlexJustify,
+	PassButton,
 	ProfileAvatar,
 	ProfileCell,
 	ProfileInfo,
 	ProfileList,
 	ProfileListItem,
 	ProfileName,
-	ProfileWrapper,
-	Title,
+	ProfileUnverified,
 	ProfileVerified,
-	DivFlexJustify,
-	ProfileUnverified
+	ProfileVerifyPending,
+	ProfileWrapper,
+	Title
 } from '../styled.components';
 import avatar from '../../images/avatar.svg';
 import Modal from "../modal/Modal";
+
 
 const Profile = () => {
 	const [profileInfo, setProfileInfo] = useState<ProfileDetails>();
 	const [isVerified, setIsVerified] = useState<Status>();
 	const [isOpen, setIsOpen] = useState(false);
+	const getKycStatus = () => {
+		BackendService.getKycStatus()
+			.then((value) => {
+				setIsVerified(value.status);
+			})
+			.catch((value) => console.error(value));
+	}
 	useEffect(() => {
-		BackendService.getProfileDetails().then((value) => {
-			setProfileInfo(value);
-		}).catch((value) => console.error(value));
-		BackendService.getKycStatus().then((value) => {
-			setIsVerified(value.status);
-		}).catch((value) => console.error(value));
+		BackendService.getProfileDetails()
+			.then((value) => {
+				setProfileInfo(value);
+			})
+			.catch((value) => console.error(value));
+		getKycStatus();
 	}, []);
+	const displayStatus = () => {
+		switch (isVerified) {
+			case 'verified':
+				return (<ProfileVerified>Verified</ProfileVerified>)
+			case 'not_verified':
+				return (<ProfileUnverified>Unverified</ProfileUnverified>)
+			case 'KYC pending':
+				return (<ProfileVerifyPending>Pending</ProfileVerifyPending>)
+		}
+	}
+	const displayRegister = () => {
+		switch (isVerified) {
+			case 'verified':
+				return (<></>)
+			case 'not_verified':
+				return (<PassButton onClick={() => setIsOpen(true)}>Pass now </PassButton>)
+			case 'KYC pending':
+				return (<PassButton onClick={getKycStatus}>Update status</PassButton>)
+		}
+	}
 	return (
 		<ProfileWrapper>
 			<Title>Profile Page</Title>
 			<ProfileInfo>
 				<ProfileAvatar>
-					{ isVerified === 'verified' ?  <ProfileVerified>Verified</ProfileVerified> : <ProfileUnverified disabled={isVerified === 'KYC pending'} onClick={() => setIsOpen(true)}>Unverified</ProfileUnverified>}
+					{displayStatus()}
 					<img src={avatar} alt=""/>
 				</ProfileAvatar>
+				{displayRegister()}
 				<ProfileName>{profileInfo?.name}</ProfileName>
 			</ProfileInfo>
 			{isOpen && <Modal setIsOpen={setIsOpen} setVerified={setIsVerified}/>}

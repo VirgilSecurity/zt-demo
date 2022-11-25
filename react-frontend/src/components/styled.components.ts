@@ -377,6 +377,23 @@ export const AuthButton = styled.button`
   }
 `;
 
+export const PassButton = styled.button`
+  padding: 4px 8px;
+  text-decoration: none;
+  background: #4E62C0;
+  border-radius: 150px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: medium;
+  cursor: pointer;
+  transition: .2s ease-out;
+  min-width: 100px;
+
+  &:hover {
+    box-shadow: 0 0 12px #4E62C0;
+  }
+`;
+
 export const ProfileWrapper = styled.div`
   display: flex;
   align-items: flex-start;
@@ -448,7 +465,7 @@ export const ProfileCell = styled.div`
   justify-content: center;
 `;
 
-export const ProfileUnverified = styled.button`
+export const ProfileUnverified = styled.div`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -458,10 +475,18 @@ export const ProfileUnverified = styled.button`
   color: #ffffff;
   padding: 4px 8px;
   font-weight: 600;
-  cursor: pointer;
-  :disabled {
-    cursor: default;
-  }
+`;
+
+export const ProfileVerifyPending = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -16px;
+  border-radius: 12px;
+  background-color: #f7ec1d;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-weight: 600;
 `;
 
 

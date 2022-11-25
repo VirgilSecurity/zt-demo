@@ -26,8 +26,8 @@ class MainRouterController {
             const converted = JSON.parse(value.data);
             const anotherKey = req.app.get('virgilCrypto').importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
             req.app.set('kycPublicKey', anotherKey);
+            res.json({ key: response });
         });
-        res.json({ key: response });
     }
     async getProfileDetails(req, res) {
         const keys = req.app.get('keyPair');

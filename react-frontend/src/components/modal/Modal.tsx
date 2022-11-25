@@ -11,7 +11,6 @@ import {
 } from '../styled.components';
 import BackendService from "../../services/services";
 import {
-	Currency,
 	RegisterInterface
 } from "../../constants/profile.interface";
 
