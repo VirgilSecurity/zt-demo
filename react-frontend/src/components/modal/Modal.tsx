@@ -25,7 +25,15 @@ const Modal = (props: any,) => {
 		file: null,
 	})
 	const fileUpload = (file: any) => {
-		handleChange({file: file});
+		props?.image(file);
+		let obj = {
+			lastModified    : file.lastModified,
+			lastModifiedDate : file.lastModifiedDate,
+			name             : file.name,
+			size             : file.size,
+			type             : file.type
+		}
+		handleChange({file: obj});
 	};
 	const handleChange = (value: {name: string} | {secondName: string} | {email: string} | {file : any}) => {
 		setRegisterData((oldValue) => ({

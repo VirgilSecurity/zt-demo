@@ -28,6 +28,7 @@ export interface Transactions {
 export interface StatusInterface {
 	status: Status,
 	need_verify: boolean;
+	file?: any
 }
 
 export type Status = 'not_verified' | 'verified' | 'KYC pending';

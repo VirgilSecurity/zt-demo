@@ -30,6 +30,7 @@ const Profile = () => {
 	const [profileInfo, setProfileInfo] = useState<ProfileDetails>();
 	const [isVerified, setIsVerified] = useState<Status>();
 	const [isOpen, setIsOpen] = useState(false);
+	const [image, setImage] = useState(avatar);
 	const getKycStatus = () => {
 		BackendService.getKycStatus()
 			.then((value) => {
@@ -45,6 +46,9 @@ const Profile = () => {
 			.catch((value) => console.error(value));
 		getKycStatus();
 	}, []);
+	const updateImage = (newImage: any) => {
+		setImage(URL.createObjectURL(newImage));
+	}
 	const displayStatus = () => {
 		switch (isVerified) {
 			case 'verified':
@@ -71,12 +75,12 @@ const Profile = () => {
 			<ProfileInfo>
 				<ProfileAvatar>
 					{displayStatus()}
-					<img src={avatar} alt=""/>
+					<img src={isVerified === 'verified' ? image : avatar} alt=""/>
 				</ProfileAvatar>
 				{displayRegister()}
 				<ProfileName>{profileInfo?.name}</ProfileName>
 			</ProfileInfo>
-			{isOpen && <Modal setIsOpen={setIsOpen} setVerified={setIsVerified}/>}
+			{isOpen && <Modal setIsOpen={setIsOpen} setVerified={setIsVerified} image={updateImage}/>}
 			<ProfileList>
 				<ProfileListItem key='0'>
 					<DivFlexJustify>
