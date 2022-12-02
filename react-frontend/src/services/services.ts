@@ -19,7 +19,7 @@ import { ChartResponse } from "../constants/charts.interfaces";
 
 
 class BackedService {
-	private _url: string = 'http://' + new URL(window.location.href).host.slice(0, new URL(window.location.href).host.indexOf(':')) + ':3002/api';
+	private _url: string = 'http://' + new URL(window.location.href).host.slice(0, new URL(window.location.href).host.indexOf(':')) + ':33433/api';
 
 	private virgilCrypto: VirgilCrypto;
 	private keyPair: VirgilKeyPair;

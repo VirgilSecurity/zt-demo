@@ -7,7 +7,7 @@ services:
       - PORT=3004
       - NODE_OPTIONS="--experimental-specifier-resolution=node"
     ports:
-      - 3004:3004
+      - 33434:33434
 
   express-backend:
     build: ./express-backend
@@ -16,10 +16,10 @@ services:
       - PORT=3002
       - NODE_OPTIONS="--experimental-specifier-resolution=node"
     ports:
-      - 3002:3002
+      - 33433:33433
 
   react-frontend:
     build: ./react-frontend
     container_name: frontend
     ports:
-      - 3000:80
+      - 33435:80

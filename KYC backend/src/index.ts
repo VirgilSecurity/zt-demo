@@ -50,7 +50,7 @@ const app: Express = express();
 	wss.on('connection', (ws) => {
 		app.set('ws', ws);
 	});
-	server.listen(3004, () => {
+	server.listen(33434, () => {
 		console.log('server is running');
 	});
 })();

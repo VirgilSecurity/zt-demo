@@ -17,14 +17,14 @@ import Dashboard from "./components/charts/Dashboard";
 
 function App() {
 	const url = 'ws://' + new URL(window.location.href).host.slice(0, new URL(window.location.href).host.indexOf(':'));
-	const KYCws = new WebSocket(url + ':3004');
+	const KYCws = new WebSocket(url + ':33434');
 	KYCws.onopen = () => {
 		console.log('KYC', 'KYC WebSocket opened');
 	};
 	KYCws.onmessage = (message) => {
 		console.log('KYC', message.data);
 	};
-	const ExpressWs = new WebSocket(url + ':3002');
+	const ExpressWs = new WebSocket(url + ':33433');
 	ExpressWs.onopen = () => {
 		console.log('Backend', 'Backend WebSocket opened');
 	};
