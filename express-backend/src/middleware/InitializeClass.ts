@@ -189,7 +189,6 @@ export class ZtMiddleware {
 					res.status(400);
 					return next();
 				});
-			res.status(500);
 			return next();
 		}
 		case this.baseUrl + this.loginPath + '/start': {
@@ -248,7 +247,6 @@ export class ZtMiddleware {
 					res.status(400);
 					return next();
 				});
-			res.status(500);
 			return next();
 		}
 		default:
