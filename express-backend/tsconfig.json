@@ -1,9 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "lib": ["es5", "es6", "dom", "dom.iterable"],
+    "lib": ["es5", "es6", "dom", "dom.iterable", "ES2022"],
     "baseUrl": ".",
-    "target": "es2020",
+    "target": "ES2022",
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -19,7 +19,7 @@
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "types": ["node"],
-    "module": "es2015",
+    "module": "ES2022",
     "noImplicitAny": true
   },
   "include": ["src/**/*"],

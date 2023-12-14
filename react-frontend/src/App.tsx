@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from "./components/header/Header";
 import {
 	Route,
@@ -13,9 +13,12 @@ import {
 	LogContainer,
 } from "./components/console.js";
 import Dashboard from "./components/charts/Dashboard";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register";
 
 
 function App() {
+	const [isLogged, setIsLogged] = useState(false);
 	const url = 'ws://' + new URL(window.location.href).host.slice(0, new URL(window.location.href).host.indexOf(':'));
 	const KYCws = new WebSocket(url + ':33434');
 	KYCws.onopen = () => {
@@ -33,13 +36,15 @@ function App() {
 	};
 	return (
 		<BrowserRouter>
-			<Header/>
+			<Header log={isLogged}/>
 			<Wrapper>
 				<Routes>
 					<Route path='/' element={<Home/>}/>
 					<Route path='/transactions' element={<Transaction/>}/>
 					<Route path='/profile' element={<Profile/>}/>
 					<Route path='/dashboard' element={<Dashboard/>}/>
+					<Route path='/login' element={<Login onLogged={setIsLogged}/>}/>
+					<Route path='/register' element={<Register/>}/>
 				</Routes>
 				<LogContainer/>
 			</Wrapper>

@@ -18,5 +18,6 @@ module.exports = function override(config) {
             Buffer: ["buffer", "Buffer"],
         }),
     ]);
+    console.log(config);
     return config;
 };

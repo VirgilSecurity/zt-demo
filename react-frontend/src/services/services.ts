@@ -16,6 +16,10 @@ import {
 import { VirgilKeyPair } from "virgil-crypto/dist/types/types";
 import { NodeBuffer } from "@virgilsecurity/data-utils";
 import { ChartResponse } from "../constants/charts.interfaces";
+import {
+	fido2Create,
+	fido2Get
+} from '@ownid/webauthn';
 
 
 class BackedService {
@@ -51,18 +55,31 @@ class BackedService {
 		console.log('Generate client public and private keys', this.keyPair);
 	}
 
-	public async login() {
+	public async register(userName: string) {
 		console.clear();
-		console.log('POST /login get public server key request body ->', { key: this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64') })
-		await this.axios.post<any>('login', { key: this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64') })
-			.then(value => {
-				const converted = JSON.parse(value.data);
-				if (!converted.key) {
-					throw new Error('Login error, login again pls');
-				}
-				console.log('POST /login response server public key', converted.key);
-				this.serverPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
-			});
+		console.log('POST /register with user ->', {username: userName});
+		return this.axios.post<any>('register/start', {username: userName}).then(async (value) => {
+			const data = await fido2Create(JSON.parse(value.data).data, userName);
+			return this.axios.post<boolean>('register/finish', data).then((value) => {
+				return value;
+			})
+		})
+	}
+
+	public async login(userName: string) {
+		console.clear();
+		console.log('POST /login username send ->', { username: userName });
+		return await this.axios.post<any>('login/start', { username: userName }).then(async (value) => {
+			const convertData = JSON.parse(value.data);
+			const sendKey = this.virgilCrypto.exportPublicKey(this.keyPair.publicKey).toString('base64');
+			this.serverPublicKey = this.virgilCrypto.importPublicKey(convertData.data.serverKey);
+			convertData.data.challenge = convertData.data.challenge + '_' + sendKey;
+			const data = await fido2Get(convertData.data, userName);
+			return this.axios.post<boolean>('login/finish', {data}).then((value) => {
+				// @ts-ignore
+				return value.data.res
+			})
+		});
 	}
 
 	public async getProfileDetails(): Promise<ProfileDetails> {
@@ -115,7 +132,7 @@ class BackedService {
 		console.log(JSON.stringify(filter));
 		const encryptedFilter = this.virgilCrypto.signThenEncrypt(JSON.stringify(filter), this.keyPair.privateKey, this.serverPublicKey).toString('base64')
 		console.log('POST /transaction request data after encrypt', encryptedFilter);
-		return await this.axios.post<any>('transaction', {info: encryptedFilter}).then((value) => {
+		return await this.axios.post<any>('transaction', {data: encryptedFilter}).then((value) => {
 			const converted = JSON.parse(value.data);
 			if (!converted.data) {
 				throw new Error('Login error, login again pls');
@@ -140,12 +157,12 @@ class BackedService {
 		console.clear()
 		return await this.axios.post<any>('charts').then((value) => {
 			const converted = JSON.parse(value.data);
-			if (!converted.info) {
+			if (!converted.data) {
 				throw new Error('Login error, login again pls');
 			}
-			console.log('POST /charts response data before decrypt ->', converted.info);
+			console.log('POST /charts response data before decrypt ->', converted.data);
 			const decryptedBuffer =
-				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.info, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
+				this.virgilCrypto.decryptThenVerify(NodeBuffer.from(converted.data, 'base64'), this.keyPair.privateKey, [this.keyPair.publicKey, this.serverPublicKey])
 					.toString('utf-8');
 			console.log('POST /charts response data after decrypt ->', decryptedBuffer.toString());
 			return JSON.parse(decryptedBuffer) as unknown as ChartResponse;
@@ -171,7 +188,7 @@ class BackedService {
 		console.clear();
 		console.log('POST /registerInKyc request data before encrypt', registerData);
 		const encryptedData = this.virgilCrypto.signThenEncrypt(JSON.stringify(registerData), this.keyPair.privateKey, this.serverPublicKey).toString('base64')
-		return this.axios.post('/kyc', {info: encryptedData}).then((value) => {
+		return this.axios.post('/kyc', {data: encryptedData}).then((value) => {
 			const converted = JSON.parse(value.data);
 			if (!converted.status) {
 				throw new Error('Login error, login again pls');

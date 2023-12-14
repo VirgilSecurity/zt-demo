@@ -3,42 +3,79 @@ import dotenv from 'dotenv';
 import express from 'express';
 import morganMiddleware from './logger/morganMiddleware.js';
 import routes from './routes/routes.js';
-import { initCrypto, KeyPairType, VirgilCrypto } from 'virgil-crypto';
+import { KeyPairType } from 'virgil-crypto';
 import { AccountDetailsMocks } from './mocks/accountDetailsMocks.js';
 import { ProfileDetailsMocks } from './mocks/profileDetailsMocks.js';
 import * as http from 'http';
 import { WebSocketServer } from 'ws';
+import { ZtMiddleware } from './middleware/InitializeClass.js';
+import fs from "fs";
 dotenv.config();
 const app = express();
-(async () => {
-    // create express app
-    await initCrypto();
-    const virgilCrypto = new VirgilCrypto({ defaultKeyPairType: KeyPairType.ED25519 });
-    const keyPair = virgilCrypto.generateKeys(KeyPairType.ED25519);
-    //set global app variables
-    app.set('keyPair', keyPair);
-    app.set('virgilCrypto', virgilCrypto);
-    app.set('accountDetails', JSON.parse(AccountDetailsMocks));
-    app.set('profileInfo', JSON.parse(ProfileDetailsMocks));
-    // use custom middlewares for logs and json convert
-    app.use(cors());
-    app.use(express.json());
-    app.use(morganMiddleware);
-    // apply routes
-    app.use(routes);
-    app.get('/', (req, res) => {
-        res.send('Application is running');
+const TemplateStorage = new Map();
+const storageSave = (key, isClient) => {
+    TemplateStorage.set(isClient ? 'client' : 'server', key);
+};
+const storageLoad = (isClient) => {
+    return isClient ? TemplateStorage.get('client') : TemplateStorage.get('server');
+};
+function storage(isSave, isClient, key) {
+    if (isSave) {
+        storageSave(key, isClient);
+        return;
+    }
+    return storageLoad(isClient);
+}
+const virgil = new ZtMiddleware({
+    baseUrl: '/api',
+    loginPath: '/login',
+    registerPath: '/register',
+    keyType: KeyPairType.ED25519,
+    replayingId: 'localhost',
+    expectedOrigin: ['http://localhost:33435'],
+    storageControl: storage,
+    encoding: 'base64'
+});
+app.set('accountDetails', JSON.parse(AccountDetailsMocks));
+app.set('profileInfo', JSON.parse(ProfileDetailsMocks));
+app.set('virgil', virgil);
+// use custom middlewares for logs and json convert
+app.use(cors());
+app.use(express.json());
+app.use(morganMiddleware);
+app.use(virgil.zeroTrustMiddleware);
+// apply routes
+app.use(routes);
+app.get('/', (req, res) => {
+    res.send('Application is running');
+});
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
+wss.on('open', (ws, request, client) => {
+    client.send('connected!');
+});
+wss.on('connection', (ws) => {
+    app.set('ws', ws);
+});
+server.listen(33433, () => {
+    console.log('server is running');
+});
+['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM'].forEach((eventType) => {
+    process.on(eventType, () => {
+        console.log('write to file');
+        const saveObject = { serverKeys: [], clientKeys: [] };
+        TemplateStorage.forEach((value, key) => {
+            if (key == 'server') {
+                saveObject.serverKeys.push(value);
+            }
+            else {
+                saveObject.clientKeys.push(value);
+            }
+        });
+        fs.writeFile('storage.json', JSON.stringify(saveObject), (err) => {
+            console.log(err);
+            console.log('Saved to file!');
+        });
     });
-    const server = http.createServer(app);
-    const wss = new WebSocketServer({ server });
-    wss.on('open', (ws, request, client) => {
-        client.send('connected!');
-    });
-    wss.on('connection', (ws) => {
-        app.set('ws', ws);
-    });
-    server.listen(3002, () => {
-        console.log('server is running');
-    });
-})();
+});
 //# sourceMappingURL=index.js.map

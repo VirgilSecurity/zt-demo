@@ -106,6 +106,7 @@ express-backend/dist
 
 #idea
 .idea
+dist/
 
 #lockfiles
 *.lock
