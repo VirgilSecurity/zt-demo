@@ -51,7 +51,7 @@ const virgil = new ZtMiddleware({
 	registerPath: '/register',
 	keyType: KeyPairType.ED25519,
 	replayingId: 'localhost',
-	expectedOrigin: [ 'http://localhost:33435' ],
+	expectedOrigin: [ 'http://localhost:33435', 'https://zt.virgilsecurity.com/' ],
 	storageControl: storage,
 	encoding: 'base64'
 });
