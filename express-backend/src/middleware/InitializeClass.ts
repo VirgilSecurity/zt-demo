@@ -158,8 +158,8 @@ export class ZtMiddleware {
 				],
 				authenticatorSelection: {
 					authenticatorAttachment: 'cross-platform',
-					userVerification: 'discouraged',
-					residentKey: 'discouraged',
+					userVerification: 'required',
+					residentKey: 'required',
 					requireResidentKey: false,
 				}
 			};
@@ -208,7 +208,7 @@ export class ZtMiddleware {
 						id: this.users.get(username)!.credentialID,
 						transports: [ 'external' ],
 					} ],
-					userVerification: 'discouraged',
+					userVerification: 'required',
 					serverKey: this.virgilCrypto.exportPublicKey(this.encryptKeys.publicKey)
 						.toString('base64')
 				}
