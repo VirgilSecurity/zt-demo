@@ -158,7 +158,7 @@ export class ZtMiddleware {
 				],
 				authenticatorSelection: {
 					authenticatorAttachment: 'cross-platform',
-					userVerification: 'required',
+					userVerification: 'preferred',
 					residentKey: 'required',
 					requireResidentKey: false,
 				}
@@ -172,7 +172,8 @@ export class ZtMiddleware {
 			await verifyRegistrationResponse({
 				response: req.body.data,
 				expectedChallenge: this.challenges.get(username)!,
-				expectedOrigin: this.origin
+				expectedOrigin: this.origin,
+				requireUserVerification: true,
 			})
 				.then((result) => {
 					const {verified, registrationInfo} = result;
