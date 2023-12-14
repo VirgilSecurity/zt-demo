@@ -235,12 +235,13 @@ export class ZtMiddleware {
 				expectedRPID: this.prId,
 				expectedOrigin: this.origin
 			})
-				.then((result) => {
+				.then(async (result) => {
 					const {verified} = result;
-					this.registerInKyc();
-					res.send({res: verified});
-					res.status(200);
-					return next();
+					return await this.registerInKyc().then(() => {
+						res.send({res: verified});
+						res.status(200);
+						return next();
+					});
 				})
 				.catch((error) => {
 					console.error(error);
@@ -264,7 +265,7 @@ export class ZtMiddleware {
 		};
 	};
 
-	public registerInKyc = () => {
+	public  registerInKyc = async () => {
 		const axios: Axios = new Axios({
 			//transformResponse: res => JSON.parse(res as unknown as string),
 			transformRequest: req => JSON.stringify(req),
