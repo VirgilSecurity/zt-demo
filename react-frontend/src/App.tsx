@@ -19,7 +19,7 @@ import Register from "./components/register/Register";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(false);
-	const url = 'ws://' + new URL(window.location.href).host;
+	const url = 'wss://' + new URL(window.location.href).host;
 	const KYCws = new WebSocket(url + ':33434');
 	KYCws.onopen = () => {
 		console.log('KYC', 'KYC WebSocket opened');
