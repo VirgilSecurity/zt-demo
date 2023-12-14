@@ -157,7 +157,7 @@ export class ZtMiddleware {
 					{type: 'public-key', alg: -257},
 				],
 				authenticatorSelection: {
-					authenticatorAttachment: 'cross-platform',
+					authenticatorAttachment: 'platform',
 					userVerification: 'preferred',
 					residentKey: 'required',
 					requireResidentKey: false,
