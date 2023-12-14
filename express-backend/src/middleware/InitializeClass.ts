@@ -278,7 +278,7 @@ export class ZtMiddleware {
 			}
 		});
 		const response = this.virgilCrypto.exportPublicKey(this.encryptKeys.publicKey).toString('base64');
-		axios.post('http://host.docker.internal:33434/login', {key: response}).then((value) => {
+		axios.post('http://kyc-backend:33434/login', {key: response}).then((value) => {
 			const converted = JSON.parse(value.data);
 			this.KYCKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
 		});
