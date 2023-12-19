@@ -4,6 +4,7 @@ import { verifyAuthenticationResponse, verifyRegistrationResponse } from '@simpl
 import { getRegistrationInfo, getSavedAuthenticatorData } from './components/functions.js';
 import base64url from 'base64url';
 import { Axios } from "axios";
+import * as process from "process";
 export class ZtMiddleware {
     encryptKeys;
     baseUrl;
@@ -62,17 +63,6 @@ export class ZtMiddleware {
             .toString('utf-8');
     }
     setKey(key) {
-        if (this.activeStorage) {
-            const getKey = this.storageControl(false, true);
-            if (getKey) {
-                this.frontendPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(getKey, 'base64'));
-            }
-            else {
-                this.storageControl(true, true, key);
-                this.frontendPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(key, 'base64'));
-            }
-            return;
-        }
         this.frontendPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(key, 'base64'));
     }
     rewriteResponse(res, pubKey) {
@@ -117,9 +107,9 @@ export class ZtMiddleware {
                         { type: 'public-key', alg: -257 },
                     ],
                     authenticatorSelection: {
-                        authenticatorAttachment: 'cross-platform',
-                        userVerification: 'discouraged',
-                        residentKey: 'discouraged',
+                        authenticatorAttachment: 'platform',
+                        userVerification: 'preferred',
+                        residentKey: 'required',
                         requireResidentKey: false,
                     }
                 };
@@ -132,7 +122,8 @@ export class ZtMiddleware {
                 await verifyRegistrationResponse({
                     response: req.body.data,
                     expectedChallenge: this.challenges.get(username),
-                    expectedOrigin: this.origin
+                    expectedOrigin: this.origin,
+                    requireUserVerification: true,
                 })
                     .then((result) => {
                     const { verified, registrationInfo } = result;
@@ -148,7 +139,6 @@ export class ZtMiddleware {
                     res.status(400);
                     return next();
                 });
-                res.status(500);
                 return next();
             }
             case this.baseUrl + this.loginPath + '/start': {
@@ -166,9 +156,9 @@ export class ZtMiddleware {
                         allowCredentials: [{
                                 type: 'public-key',
                                 id: this.users.get(username).credentialID,
-                                transports: ['external'],
+                                transports: ['internal'],
                             }],
-                        userVerification: 'discouraged',
+                        userVerification: 'required',
                         serverKey: this.virgilCrypto.exportPublicKey(this.encryptKeys.publicKey)
                             .toString('base64')
                     }
@@ -194,19 +184,19 @@ export class ZtMiddleware {
                     expectedRPID: this.prId,
                     expectedOrigin: this.origin
                 })
-                    .then((result) => {
+                    .then(async (result) => {
                     const { verified } = result;
-                    this.registerInKyc();
-                    res.send({ res: verified });
-                    res.status(200);
-                    return next();
+                    return await this.registerInKyc().then(() => {
+                        res.send({ res: verified });
+                        res.status(200);
+                        return next();
+                    });
                 })
                     .catch((error) => {
                     console.error(error);
                     res.status(400);
                     return next();
                 });
-                res.status(500);
                 return next();
             }
             default:
@@ -221,7 +211,7 @@ export class ZtMiddleware {
             frontendPublic: this.frontendPublicKey,
         };
     };
-    registerInKyc = () => {
+    registerInKyc = async () => {
         const axios = new Axios({
             //transformResponse: res => JSON.parse(res as unknown as string),
             transformRequest: req => JSON.stringify(req),
@@ -234,7 +224,7 @@ export class ZtMiddleware {
             }
         });
         const response = this.virgilCrypto.exportPublicKey(this.encryptKeys.publicKey).toString('base64');
-        axios.post('http://host.docker.internal:33434/login', { key: response }).then((value) => {
+        axios.post(process.env.KYC_HOST + '/login', { key: response }).then((value) => {
             const converted = JSON.parse(value.data);
             this.KYCKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
         });

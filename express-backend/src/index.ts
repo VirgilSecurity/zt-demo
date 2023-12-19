@@ -21,6 +21,7 @@ import * as http from 'http';
 import { WebSocketServer } from 'ws';
 import { ZtMiddleware } from './middleware/InitializeClass.js';
 import fs from "fs";
+import process from "process";
 
 
 dotenv.config();
@@ -50,8 +51,8 @@ const virgil = new ZtMiddleware({
 	loginPath: '/login',
 	registerPath: '/register',
 	keyType: KeyPairType.ED25519,
-	replayingId: 'zt.virgilsecurity.com',
-	expectedOrigin: ['https://zt.virgilsecurity.com/', 'https://zt.virgilsecurity.com' ],
+	replayingId: process.env.REP_URL!,
+	expectedOrigin: ['https://zt.virgilsecurity.com/', 'https://zt.virgilsecurity.com', 'http://localhost:3000' ],
 	storageControl: storage,
 	encoding: 'base64'
 });
@@ -86,23 +87,23 @@ server.listen(33433, () => {
 	console.log('server is running');
 });
 
-[ 'exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM' ].forEach((eventType) => {
-	process.on(eventType, () => {
-		console.log('write to file');
-		const saveObject: { serverKeys: unknown[], clientKeys: unknown[] } = {serverKeys: [], clientKeys: []};
-		TemplateStorage.forEach((value: unknown, key) => {
-			if (key == 'server') {
-				saveObject.serverKeys.push(value);
-			} else {
-				saveObject.clientKeys.push(value);
-			}
-		});
-		fs.writeFile('storage.json', JSON.stringify(saveObject), (err) => {
-			console.log(err);
-			console.log('Saved to file!');
-		});
-	});
-});
+// [ 'exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM' ].forEach((eventType) => {
+// 	process.on(eventType, () => {
+// 		console.log('write to file');
+// 		const saveObject: { serverKeys: unknown[], clientKeys: unknown[] } = {serverKeys: [], clientKeys: []};
+// 		TemplateStorage.forEach((value: unknown, key) => {
+// 			if (key == 'server') {
+// 				saveObject.serverKeys.push(value);
+// 			} else {
+// 				saveObject.clientKeys.push(value);
+// 			}
+// 		});
+// 		fs.writeFile('storage.json', JSON.stringify(saveObject), (err) => {
+// 			console.log(err);
+// 			console.log('Saved to file!');
+// 		});
+// 	});
+// });
 
 
 

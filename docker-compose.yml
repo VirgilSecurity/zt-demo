@@ -15,11 +15,17 @@ services:
     environment:
       - PORT=3002
       - NODE_OPTIONS="--experimental-specifier-resolution=node"
+      - KYC_HOST=http://kyc-backend:33434
+      - REP_URL=zt.virgilsecurity.com
     ports:
       - 3433:33433
 
   react-frontend:
     build: ./react-frontend
     container_name: frontend
+    environment:
+      - REACT_APP_WEB_SOKET_BACKEND=wss://zt.virgilsecurity.com:33433
+      - REACT_APP_WEB_SOKET_KYC=wss://zt.virgilsecurity.com:33434
+      - REACT_APP_API_URL=https://zt.virgilsecurity.com:33433
     ports:
       - 33435:80

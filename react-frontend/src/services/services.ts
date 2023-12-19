@@ -23,7 +23,7 @@ import {
 
 
 class BackedService {
-	private _url: string = 'https://' + new URL(window.location.href).host + ':33433/api';
+	private _url: string = process.env.REACT_APP_API_URL + '/api';
 
 	private virgilCrypto: VirgilCrypto;
 	private keyPair: VirgilKeyPair;

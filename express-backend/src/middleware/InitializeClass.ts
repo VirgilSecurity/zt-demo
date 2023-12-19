@@ -20,6 +20,7 @@ import {
 } from './components/functions.js';
 import base64url from 'base64url';
 import { Axios } from "axios";
+import * as process from "process";
 
 
 export class ZtMiddleware {
@@ -96,16 +97,6 @@ export class ZtMiddleware {
 	}
 
 	private setKey(key: string): void {
-		if (this.activeStorage) {
-			const getKey = this.storageControl(false, true);
-			if (getKey) {
-				this.frontendPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(getKey, 'base64'));
-			} else {
-				this.storageControl(true, true, key);
-				this.frontendPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(key, 'base64'));
-			}
-			return;
-		}
 		this.frontendPublicKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(key, 'base64'));
 	}
 
@@ -206,7 +197,7 @@ export class ZtMiddleware {
 					allowCredentials: [ {
 						type: 'public-key',
 						id: this.users.get(username)!.credentialID,
-						transports: [ 'external' ],
+						transports: [ 'internal' ],
 					} ],
 					userVerification: 'required',
 					serverKey: this.virgilCrypto.exportPublicKey(this.encryptKeys.publicKey)
@@ -276,7 +267,7 @@ export class ZtMiddleware {
 			}
 		});
 		const response = this.virgilCrypto.exportPublicKey(this.encryptKeys.publicKey).toString('base64');
-		axios.post('http://kyc-backend:33434/login', {key: response}).then((value) => {
+		axios.post(process.env.KYC_HOST + '/login', {key: response}).then((value) => {
 			const converted = JSON.parse(value.data);
 			this.KYCKey = this.virgilCrypto.importPublicKey(NodeBuffer.from(converted.key + '', 'base64'));
 		});

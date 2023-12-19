@@ -34,6 +34,6 @@ export declare class ZtMiddleware {
         KYCPublic: VirgilPublicKey;
         frontendPublic: VirgilPublicKey;
     };
-    registerInKyc: () => void;
+    registerInKyc: () => Promise<void>;
     zeroTrustMiddleware: (req: express.Request, res: express.Response, next: CallableFunction) => any;
 }

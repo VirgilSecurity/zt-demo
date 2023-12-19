@@ -19,15 +19,14 @@ import Register from "./components/register/Register";
 
 function App() {
 	const [isLogged, setIsLogged] = useState(false);
-	const url = 'wss://' + new URL(window.location.href).host;
-	const KYCws = new WebSocket(url + ':33434');
+	const KYCws = new WebSocket(process.env.REACT_APP_WEB_SOKET_KYC);
 	KYCws.onopen = () => {
 		console.log('KYC', 'KYC WebSocket opened');
 	};
 	KYCws.onmessage = (message) => {
 		console.log('KYC', message.data);
 	};
-	const ExpressWs = new WebSocket(url + ':33433');
+	const ExpressWs = new WebSocket(process.env.REACT_APP_WEB_SOKET_BACKEND);
 	ExpressWs.onopen = () => {
 		console.log('Backend', 'Backend WebSocket opened');
 	};
