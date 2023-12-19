@@ -4,7 +4,6 @@ services:
     build: ./KYC backend
     container_name: kyc-backend
     environment:
-      - PORT=3004
       - NODE_OPTIONS="--experimental-specifier-resolution=node"
     ports:
       - 3434:33434
@@ -13,7 +12,6 @@ services:
     build: ./express-backend
     container_name: backend
     environment:
-      - PORT=3002
       - NODE_OPTIONS="--experimental-specifier-resolution=node"
       - KYC_HOST=http://kyc-backend:33434
       - REP_URL=zt.virgilsecurity.com
