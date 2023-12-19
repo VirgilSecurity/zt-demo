@@ -24,9 +24,15 @@ import {
 } from '../styled.components';
 import avatar from '../../images/avatar.svg';
 import Modal from "../modal/Modal";
+import { useNavigate } from "react-router";
 
 
-const Profile = () => {
+interface ProfileProps {
+	logged: boolean
+}
+
+const Profile = ({logged}: ProfileProps) => {
+	const navigate = useNavigate();
 	const [profileInfo, setProfileInfo] = useState<ProfileDetails>();
 	const [isVerified, setIsVerified] = useState<Status>();
 	const [isOpen, setIsOpen] = useState(false);
@@ -39,12 +45,16 @@ const Profile = () => {
 			.catch((value) => console.error(value));
 	}
 	useEffect(() => {
-		BackendService.getProfileDetails()
-			.then((value) => {
-				setProfileInfo(value);
-			})
-			.catch((value) => console.error(value));
-		getKycStatus();
+		if (logged) {
+			BackendService.getProfileDetails()
+				.then((value) => {
+					setProfileInfo(value);
+				})
+				.catch((value) => console.error(value));
+			getKycStatus();
+		} else {
+			navigate("/")
+		}
 	}, []);
 	const updateImage = (newImage: any) => {
 		setImage(URL.createObjectURL(newImage));

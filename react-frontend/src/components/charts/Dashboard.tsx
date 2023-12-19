@@ -21,9 +21,14 @@ import ApplicationChartComponent from "./components/ApplicationChartComponent";
 import PolicesChartComponent from "./components/PolicesChartComponent";
 import UsersChartComponent from "./components/UsersChartComponent";
 import DevicesChartComponent from "./components/DevicesChartComponent";
+import { useNavigate } from "react-router";
 
+interface DashboardProps {
+	logged: boolean;
+}
 
-const Dashboard = () => {
+const Dashboard = ({logged}: DashboardProps) => {
+	const navigate = useNavigate();
 	const [application, setApplication] = useState<ApplicationChart[]>([]);
 	const [polices, setPolices] = useState<PolicesChart[]>([]);
 	const [users, setUsers] = useState<UsersChart[]>([]);
@@ -31,13 +36,17 @@ const Dashboard = () => {
 	const [transactions, setTransactions] = useState<TransactionsChart[]>([]);
 	const [tab, setTab] = useState<number>(0);
 	useEffect(() => {
-		BackendService.getCharts().then((value) => {
-			setApplication(value.application);
-			setPolices(value.polices);
-			setUsers(value.users);
-			setDevices(value.devices);
-			setTransactions(value.transactions);
-		}).catch((value) => console.error(value))
+		if (!logged) {
+			navigate("/")
+		} else {
+			BackendService.getCharts().then((value) => {
+				setApplication(value.application);
+				setPolices(value.polices);
+				setUsers(value.users);
+				setDevices(value.devices);
+				setTransactions(value.transactions);
+			}).catch((value) => console.error(value))
+		}
 	}, [])
 	const ChooseRightComponent = (index: number) => {
 		switch (index) {

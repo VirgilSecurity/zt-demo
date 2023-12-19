@@ -24,9 +24,13 @@ import {
 } from '../styled.components';
 import LoadingOverlayWrapper from "react-loading-overlay-ts";
 import { isNumber } from "util";
+import { useNavigate } from "react-router";
 
-
-const Transaction = () => {
+interface TransactionProps {
+	logged: boolean;
+}
+const Transaction = ({logged}: TransactionProps) => {
+	const navigate = useNavigate();
 	const [error, setError] = useState<{isError: boolean, errorText: string}>({
 		isError: false,
 		errorText: ''
@@ -60,7 +64,12 @@ const Transaction = () => {
 	}
 	useEffect(() => {
 		console.clear()
-		callTable();
+		if (!logged) {
+			navigate("/")
+		} else {
+			callTable();
+		}
+
 	}, [])
 	const callTable = () => {
 		setError({isError: false, errorText: ''})
